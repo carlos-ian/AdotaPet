@@ -5,7 +5,7 @@ UPDATE usuario SET bairro = 'Jardim Amália', complemento = 'Apto 102' WHERE ema
 UPDATE usuario SET numero = '450' WHERE email = 'ana.santos@email.com';
 UPDATE usuario SET cidade = 'Niterói', estado = 'RJ' WHERE id_usuario = 5;
 UPDATE usuario SET cep = '24000-000' WHERE email = 'paula.lima@email.com' AND cidade = 'Niterói';
-UPDATE usuario SET logradouro = 'Avenida Brasil' WHERE id_usuario = 7;
+UPDATE usuario SET rua = 'Avenida Brasil' WHERE id_usuario = 7;
 
 -- Atualização na Tabela usuario_telefone
 UPDATE usuario_telefone SET telefone = '(11) 99999-0001' WHERE telefone = '(11) 98888-1111';
@@ -40,7 +40,7 @@ UPDATE adotante_historico_pets SET descricao = 'Sem histórico prévio de pets, 
 UPDATE animal SET status = 'Adotado', observacao = 'Adoção concluída com sucesso!' WHERE id_animal = 1;
 UPDATE animal SET raca = 'Labrador Retriever', porte = 'Grande' WHERE nome = 'Rex' AND especie = 'Cão';
 UPDATE animal SET idade = 3 WHERE id_animal = 3;
-UPDATE animal SET porte = 'Médio', sexo = 'Macho' WHERE nome = 'Mingau' AND especie = 'Gato';
+UPDATE animal SET porte = 'Médio', sexo = 'M' WHERE nome = 'Mingau' AND especie = 'Gato';
 UPDATE animal SET observacao = 'Castrado, vacinado e vermifugado.' WHERE id_animal = 5;
 UPDATE animal SET status = 'Em Tratamento' WHERE status = 'Pendente';
 UPDATE animal SET raca = 'Vira-lata (SRD)' WHERE raca = 'SRD' OR raca IS NULL;
@@ -83,11 +83,11 @@ UPDATE adota SET status = 'Aprovado', data_de_conclusao = '2025-02-15' WHERE id_
 UPDATE adota SET status = 'Em Análise' WHERE status = 'Reprovado';
 UPDATE adota SET observacao_do_processo = 'Entrevista presencial realizada. Agendada visita domiciliar.' WHERE id_adotante = 2 AND id_animal = 3;
 UPDATE adota SET status = 'Em Visita Domiciliar' WHERE status = 'Solicitado';
-UPDATE adota SET data_solicitacao = '2025-01-20', observacao_do_processo = 'Documentação validada com sucesso.' WHERE id_adotante = 3 AND id_animal = 4;
+UPDATE adota SET data_de_solicitacao = '2025-01-20', observacao_do_processo = 'Documentação validada com sucesso.' WHERE id_adotante = 3 AND id_animal = 4;
 UPDATE adota SET status = 'Cancelado', observacao_do_processo = 'Desistência por parte do adotante.' WHERE id_adotante = 4 AND id_animal = 5;
 UPDATE adota SET status = 'Concluído', data_de_conclusao = '2025-02-20' WHERE id_adotante = 5 AND id_animal = 6;
 UPDATE adota SET observacao_do_processo = 'Aguardando envio do comprovante de residência.' WHERE status = 'Pendente';
-UPDATE adota SET data_solicitacao = '2025-02-01' WHERE id_adotante = 6 AND id_animal = 7;
+UPDATE adota SET data_de_solicitacao = '2025-02-01' WHERE id_adotante = 6 AND id_animal = 7;
 UPDATE adota SET status = 'Aprovado' WHERE id_animal = 8 AND status = 'Em Análise';
 
 -- Atualização na Tabela apadrinha
@@ -95,7 +95,7 @@ UPDATE apadrinha SET tipo_de_contribuicao = 'Financeira', valor_recorrente = 150
 UPDATE apadrinha SET frequencia = 'Mensal' WHERE frequencia = 'Bimestral';
 UPDATE apadrinha SET valor_recorrente = 200.00 WHERE id_adotante = 3 AND id_animal = 4;
 UPDATE apadrinha SET tipo_de_contribuicao = 'Ração e Medicamentos', valor_recorrente = NULL WHERE id_adotante = 4 AND id_animal = 5;
-UPDATE apadrinha SET data_inicio = '2025-01-01' WHERE id_adotante = 2 AND id_animal = 3;
+UPDATE apadrinha SET data_de_inicio = '2025-01-01' WHERE id_adotante = 2 AND id_animal = 3;
 UPDATE apadrinha SET valor_recorrente = 100.00 WHERE id_adotante = 5 AND id_animal = 6;
 UPDATE apadrinha SET frequencia = 'Semestral' WHERE id_adotante = 6 AND id_animal = 7;
 UPDATE apadrinha SET tipo_de_contribuicao = 'Financeira' WHERE id_animal = 8;
