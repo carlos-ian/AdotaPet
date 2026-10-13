@@ -1,4 +1,4 @@
--- Lista apadrinhamentos vinculandos a Padrinhos, Contribuições e Pets
+-- Inner Joins com Adotante + Apadrinha + Animal (3 Tabelas)
 SELECT 
     a.nome AS nome_padrinho,
 	a.cpf AS cpf_padrinho,
@@ -12,3 +12,5 @@ SELECT
 FROM Adotante a
 INNER JOIN Apadrinha ap ON a.id_usuario = ap.id_adotante
 INNER JOIN Animal an ON ap.id_animal = an.id_animal;
+
+-- Mostra os apadrinhamentos realizados com informações do padrinho e animal apadrinhado
