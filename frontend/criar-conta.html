@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdotaPet - Cadastro de Usuário</title>
+    <link rel="stylesheet" href="static/criar-conta.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="register-container">
+        <div class="header-section">
+            <div class="logo">
+                <i class="fa-solid fa-paw paw-logo"></i>
+                <h1>Adota<span>Pet</span></h1>
+            </div>
+            <h2>Crie sua conta no AdotaPet</h2>
+            <p>Preencha as informações para começar a transformar vidas de animais resgatados.</p>
+        </div>
+
+        <div class="stepper">
+            <div class="step active" id="step-indicator-1">
+                <div class="step-icon"><i class="fa-solid fa-user"></i></div>
+                <span class="step-label">Perfil & Acesso</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="step-indicator-2">
+                <div class="step-icon"><i class="fa-solid fa-location-dot"></i></div>
+                <span class="step-label">Endereço & Contato</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="step-indicator-3">
+                <div class="step-icon"><i class="fa-solid fa-address-card"></i></div>
+                <span class="step-label">Dados Específicos</span>
+            </div>
+        </div>
+
+        <form id="registerForm" onsubmit="handleRegister(event)">
+            <div class="form-step active" id="step-1">
+                <div class="profile-selection">
+                    <label class="profile-card active" id="card-adotante">
+                        <input type="radio" name="tipo_usuario" value="Adotante" checked onchange="toggleProfileType('Adotante')">
+                        <i class="fa-solid fa-heart profile-icon"></i>
+                        <span class="profile-title">Desejo Adotar / Apadrinhar</span>
+                        <span class="profile-desc">Para pessoas interessadas em dar um novo lar ou apadrinhar pets.</span>
+                    </label>
+
+                    <label class="profile-card" id="card-instituicao">
+                        <input type="radio" name="tipo_usuario" value="Instituicao" onchange="toggleProfileType('Instituicao')">
+                        <i class="fa-solid fa-building-ngo profile-icon"></i>
+                        <span class="profile-title">Represento uma ONG / Instituição</span>
+                        <span class="profile-desc">Para organizações que gerenciam resgates e processos de adoção.</span>
+                    </label>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="email"><i class="fa-solid fa-envelope"></i> E-mail *</label>
+                        <input type="email" id="email" name="email" placeholder="seuemail@exemplo.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="senha"><i class="fa-solid fa-lock"></i> Senha *</label>
+                        <input type="password" id="senha" name="senha" placeholder="Mínimo de 6 caracteres" required minlength="6">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmar_senha"><i class="fa-solid fa-shield-halved"></i> Confirmar Senha *</label>
+                        <input type="password" id="confirmar_senha" placeholder="Repita sua senha" required minlength="6">
+                    </div>
+                </div>
+
+                <div class="step-actions right">
+                    <button type="button" class="btn-btn btn-primary" onclick="nextStep(1)">
+                        Próximo <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-step" id="step-2">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="cep"><i class="fa-solid fa-map-pin"></i> CEP</label>
+                        <input type="text" id="cep" name="cep" placeholder="74000-000" maxlength="9">
+                    </div>
+
+                    <div class="form-group full-width-mobile">
+                        <label for="rua"><i class="fa-solid fa-road"></i> Rua / Logradouro</label>
+                        <input type="text" id="rua" name="rua" placeholder="Ex: Av. Central">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="numero"><i class="fa-solid fa-hashtag"></i> Número</label>
+                        <input type="text" id="numero" name="numero" placeholder="Ex: 123">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="complemento"><i class="fa-solid fa-circle-info"></i> Complemento</label>
+                        <input type="text" id="complemento" name="complemento" placeholder="Ex: Apto 101, Bloco B">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bairro"><i class="fa-solid fa-draw-polygon"></i> Bairro</label>
+                        <input type="text" id="bairro" name="bairro" placeholder="Ex: Setor Bueno">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cidade"><i class="fa-solid fa-city"></i> Cidade</label>
+                        <input type="text" id="cidade" name="cidade" placeholder="Ex: Goiânia">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="estado"><i class="fa-solid fa-map"></i> Estado (UF)</label>
+                        <input type="text" id="estado" name="estado" placeholder="GO" maxlength="2" style="text-transform: uppercase;">
+                    </div>
+                </div>
+
+                <hr class="form-divider">
+
+                <div class="phone-section-header">
+                    <h3><i class="fa-solid fa-phone"></i> Números de Telefone *</h3>
+                    <button type="button" class="btn-btn btn-secondary-sm" onclick="addPhoneField()">
+                        <i class="fa-solid fa-plus"></i> Adicionar Telefone
+                    </button>
+                </div>
+
+                <div id="phoneListContainer">
+                    <div class="phone-input-row">
+                        <input type="tel" name="telefones[]" placeholder="(62) 99999-9999" required>
+                    </div>
+                </div>
+
+                <div class="step-actions">
+                    <button type="button" class="btn-btn btn-outline" onclick="prevStep(2)">
+                        <i class="fa-solid fa-arrow-left"></i> Voltar
+                    </button>
+                    <button type="button" class="btn-btn btn-primary" onclick="nextStep(2)">
+                        Próximo <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-step" id="step-3">
+                <div id="fields-adotante">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="nome"><i class="fa-solid fa-id-card"></i> Nome Completo *</label>
+                            <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cpf"><i class="fa-solid fa-fingerprint"></i> CPF *</label>
+                            <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" maxlength="14">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tipo_residencia"><i class="fa-solid fa-house"></i> Tipo de Residência</label>
+                            <select id="tipo_residencia" name="tipo_residencia">
+                                <option value="">Selecione...</option>
+                                <option value="Casa com quintal">Casa com quintal</option>
+                                <option value="Casa sem quintal">Casa sem quintal</option>
+                                <option value="Apartamento">Apartamento</option>
+                                <option value="Chácara/Sítio">Chácara/Sítio</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="historico_pets"><i class="fa-solid fa-paw"></i> Histórico prévio com pets (Opcional)</label>
+                            <textarea id="historico_pets" name="historico_pets" rows="3" placeholder="Conte-nos brevemente sua experiência anterior cuidando de animais..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="fields-instituicao" class="hidden">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="razao_social"><i class="fa-solid fa-building"></i> Razão Social / Nome da ONG *</label>
+                            <input type="text" id="razao_social" name="razao_social" placeholder="Ex: Associação de Proteção Animal AdotaPet">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cnpj"><i class="fa-solid fa-file-contract"></i> CNPJ *</label>
+                            <input type="text" id="cnpj" name="cnpj" placeholder="00.000.000/0001-00" maxlength="18">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-actions">
+                    <button type="button" class="btn-btn btn-outline" onclick="prevStep(3)">
+                        <i class="fa-solid fa-arrow-left"></i> Voltar
+                    </button>
+                    
+                    <a href="login.html" class="btn-btn btn-success" style="text-decoration: none;">
+                        <i class="fa-solid fa-check"></i> Finalizar Cadastro
+                    </a>
+                </div>
+            </div>
+        </form>
+
+        <div class="login-prompt">
+            <p>Já possui uma conta? <a href="login.html">Faça login aqui</a></p>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+
+        function toggleProfileType(type) {
+            const cardAdotante = document.getElementById('card-adotante');
+            const cardInstituicao = document.getElementById('card-instituicao');
+            const fieldsAdotante = document.getElementById('fields-adotante');
+            const fieldsInstituicao = document.getElementById('fields-instituicao');
+
+            if (type === 'Adotante') {
+                cardAdotante.classList.add('active');
+                cardInstituicao.classList.remove('active');
+                fieldsAdotante.classList.remove('hidden');
+                fieldsInstituicao.classList.add('hidden');
+            } else {
+                cardInstituicao.classList.add('active');
+                cardAdotante.classList.remove('active');
+                fieldsInstituicao.classList.remove('hidden');
+                fieldsAdotante.classList.add('hidden');
+            }
+        }
+
+        function nextStep(step) {
+            if (step === 1) {
+                const email = document.getElementById('email').value.trim();
+                const senha = document.getElementById('senha').value;
+                const confirmar = document.getElementById('confirmar_senha').value;
+
+                if (!email || !senha) {
+                    alert('Por favor, preencha o e-mail e a senha.');
+                    return;
+                }
+                if (senha !== confirmar) {
+                    alert('As senhas digitadas não coincidem.');
+                    return;
+                }
+            }
+
+            if (step === 2) {
+                const phones = document.querySelectorAll('input[name="telefones[]"]');
+                let hasPhone = false;
+                phones.forEach(p => {
+                    if (p.value.trim() !== '') hasPhone = true;
+                });
+                if (!hasPhone) {
+                    alert('Informe ao menos um número de telefone para contato.');
+                    return;
+                }
+            }
+
+            document.getElementById(`step-${step}`).classList.remove('active');
+            document.getElementById(`step-indicator-${step}`).classList.remove('active');
+            document.getElementById(`step-indicator-${step}`).classList.add('completed');
+
+            currentStep = step + 1;
+
+            document.getElementById(`step-${currentStep}`).classList.add('active');
+            document.getElementById(`step-indicator-${currentStep}`).classList.add('active');
+        }
+
+        function prevStep(step) {
+            document.getElementById(`step-${step}`).classList.remove('active');
+            document.getElementById(`step-indicator-${step}`).classList.remove('active');
+
+            currentStep = step - 1;
+
+            document.getElementById(`step-${currentStep}`).classList.add('active');
+            document.getElementById(`step-indicator-${currentStep}`).classList.remove('completed');
+            document.getElementById(`step-indicator-${currentStep}`).classList.add('active');
+        }
+
+        function addPhoneField() {
+            const container = document.getElementById('phoneListContainer');
+            const newRow = document.createElement('div');
+            newRow.className = 'phone-input-row';
+            newRow.innerHTML = `
+                <input type="tel" name="telefones[]" placeholder="(62) 99999-9999">
+                <button type="button" class="btn-remove-phone" onclick="removePhoneField(this)" title="Remover Telefone">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            `;
+            container.appendChild(newRow);
+        }
+
+        function removePhoneField(btn) {
+            const container = document.getElementById('phoneListContainer');
+            if (container.children.length > 1) {
+                btn.parentElement.remove();
+            } else {
+                alert('Você precisa ter pelo menos um número de telefone.');
+            }
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+
+            const tipoUsuario = document.querySelector('input[name="tipo_usuario"]:checked').value;
+
+            if (tipoUsuario === 'Adotante') {
+                const nome = document.getElementById('nome').value.trim();
+                const cpf = document.getElementById('cpf').value.trim();
+                if (!nome || !cpf) {
+                    alert('Por favor, preencha o Nome Completo e CPF.');
+                    return;
+                }
+            } else {
+                const razaoSocial = document.getElementById('razao_social').value.trim();
+                const cnpj = document.getElementById('cnpj').value.trim();
+                if (!razaoSocial || !cnpj) {
+                    alert('Por favor, preencha a Razão Social e CNPJ da Instituição.');
+                    return;
+                }
+            }
+
+            alert('🎉 Cadastro realizado com sucesso! Redirecionando para a página de login...');
+            window.location.href = 'login.html';
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tipo = urlParams.get('tipo');
+            
+            if (tipo === 'Instituicao') {
+                const radioInst = document.querySelector('input[name="tipo_usuario"][value="Instituicao"]');
+                if (radioInst) {
+                    radioInst.checked = true;
+                    toggleProfileType('Instituicao');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

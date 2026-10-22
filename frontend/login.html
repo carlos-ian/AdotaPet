@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdotaPet - Login e Seleção de Perfil</title>
+    <link rel="stylesheet" href="static/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="brand-side">
+            <div class="brand-content">
+                <div class="logo">
+                    <i class="fa-solid fa-paw paw-logo"></i>
+                    <h1>Adota<span>Pet</span></h1>
+                </div>
+                <p class="tagline">Conectando corações e transformando vidas através da adoção responsável.</p>
+                <div class="brand-illustration">
+                    <i class="fa-solid fa-dog animal-icon icon-dog"></i>
+                    <i class="fa-solid fa-heart heart-icon"></i>
+                    <i class="fa-solid fa-cat animal-icon icon-cat"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-side">
+            <div class="form-wrapper">
+                <h2>Seja bem-vindo(a)! </h2>
+                <p class="subtitle">Escolha como deseja acessar a plataforma:</p>
+
+                <div class="profile-selector">
+                    <button type="button" class="profile-btn active" id="btn-adotante" onclick="selectProfile('Adotante')">
+                        <i class="fa-solid fa-user"></i>
+                        <span>Sou Adotante</span>
+                    </button>
+                    <button type="button" class="profile-btn" id="btn-instituicao" onclick="selectProfile('Instituicao')">
+                        <i class="fa-solid fa-building-ngo"></i>
+                        <span>Sou Instituição</span>
+                    </button>
+                </div>
+
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <input type="hidden" id="tipo_usuario" name="tipo_usuario" value="Adotante">
+
+                    <div class="form-group">
+                        <label for="email">
+                            <i class="fa-solid fa-envelope"></i> E-mail
+                        </label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            placeholder="seuemail@exemplo.com" 
+                            required 
+                            autocomplete="email"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="senha">
+                            <i class="fa-solid fa-lock"></i> Senha
+                        </label>
+                        <div class="password-input-wrapper">
+                            <input 
+                                type="password" 
+                                id="senha" 
+                                name="senha" 
+                                placeholder="Digite sua senha" 
+                                required
+                            >
+                            <button type="button" class="toggle-password" onclick="togglePasswordVisibility()" title="Mostrar/Ocultar Senha">
+                                <i class="fa-solid fa-eye" id="eyeIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <label class="remember-me">
+                            <input type="checkbox" id="remember">
+                            <span>Lembrar-me</span>
+                        </label>
+                        <a href="#" class="forgot-password" onclick="forgotPasswordAlert(event)">Esqueceu a senha?</a>
+                    </div>
+
+                    <button type="submit" class="btn-submit" id="submitBtn">
+                        <span>Entrar como Adotante</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </form>
+
+                <div class="register-prompt">
+                    <p>Ainda não tem uma conta? <a href="criar-conta.html" id="linkRegister">Cadastre-se aqui</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function selectProfile(profileType) {
+            const btnAdotante = document.getElementById('btn-adotante');
+            const btnInstituicao = document.getElementById('btn-instituicao');
+            const hiddenInput = document.getElementById('tipo_usuario');
+            const submitBtnText = document.querySelector('#submitBtn span');
+
+            hiddenInput.value = profileType;
+
+            if (profileType === 'Adotante') {
+                btnAdotante.classList.add('active');
+                btnInstituicao.classList.remove('active');
+                submitBtnText.textContent = 'Entrar como Adotante';
+            } else {
+                btnInstituicao.classList.add('active');
+                btnAdotante.classList.remove('active');
+                submitBtnText.textContent = 'Entrar como Instituição';
+            }
+        }
+
+        function togglePasswordVisibility() {
+            const senhaInput = document.getElementById('senha');
+            const eyeIcon = document.getElementById('eyeIcon');
+
+            if (senhaInput.type === 'password') {
+                senhaInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                senhaInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
+            const senha = document.getElementById('senha').value;
+            const tipoUsuario = document.getElementById('tipo_usuario').value;
+
+            if (!email || !senha) {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
+
+            const userSession = {
+                email: email,
+                tipo_usuario: tipoUsuario,
+                isLoggedIn: true,
+                loginTime: new Date().toISOString()
+            };
+
+            localStorage.setItem('adotapet_session', JSON.stringify(userSession));
+
+            if (tipoUsuario === 'Adotante') {
+                alert('🚀 Login efetuado com sucesso!\nRedirecionando para o Portal do Adotante...');
+            } else {
+                alert('🏢 Login efetuado com sucesso!\nRedirecionando para o Painel Administrativo da ONG...');
+            }
+        }
+
+        function forgotPasswordAlert(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            if (email) {
+                alert(`Um e-mail com as instruções de recuperação de senha foi enviado para: ${email}`);
+            } else {
+                alert('Por favor, informe seu e-mail no campo correspondente antes de solicitar a recuperação.');
+            }
+        }
+    </script>
+</body>
+</html>
