@@ -17,6 +17,24 @@
     --shadow-card: 0 20px 30px -10px rgba(0, 102, 204, 0.12);
 }
 
+/* ==========================================================================
+   Variáveis Temáticas Dinâmicas
+   ========================================================================== */
+
+body.theme-adotante {
+    --active-theme-color: var(--primary-orange);
+    --active-theme-hover: var(--primary-orange-hover);
+    --header-bg-gradient: linear-gradient(135deg, #FF7A00 0%, #C85000 100%);
+    --header-accent-color: #0066CC;
+}
+
+body.theme-instituicao {
+    --active-theme-color: var(--primary-blue);
+    --active-theme-hover: var(--primary-blue-hover);
+    --header-bg-gradient: linear-gradient(135deg, #0066CC 0%, #004080 100%);
+    --header-accent-color: #FF7A00;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -40,45 +58,56 @@ body {
     background: var(--card-bg);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-card);
-    padding: 40px;
+    overflow: hidden;
 }
 
+/* Cabecalho Superior com Estilo Antigravity + Tema Dinamico */
 .header-section {
     text-align: center;
-    margin-bottom: 30px;
+    padding: 35px 30px;
+    background: var(--header-bg-gradient);
+    color: #FFFFFF;
+    transition: background 0.4s ease;
 }
 
 .logo {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 .paw-logo {
     font-size: 2.2rem;
-    color: var(--primary-orange);
+    color: var(--header-accent-color);
+    transition: color 0.4s ease;
 }
 
 .logo h1 {
     font-size: 2rem;
     font-weight: 700;
-    color: var(--primary-blue);
+    color: #FFFFFF;
 }
 
 .logo h1 span {
-    color: var(--primary-orange);
+    color: var(--header-accent-color);
+    transition: color 0.4s ease;
 }
 
 .header-section h2 {
     font-size: 1.4rem;
-    color: var(--dark-blue);
+    color: #FFFFFF;
     margin-bottom: 6px;
 }
 
 .header-section p {
-    color: var(--text-muted);
+    color: #E2E8F0;
     font-size: 0.95rem;
+}
+
+/* Corpo do Formulario */
+.form-body {
+    padding: 35px 40px;
 }
 
 .stepper {
@@ -118,24 +147,24 @@ body {
 }
 
 .step.active .step-icon {
-    background: var(--primary-orange);
+    background: var(--active-theme-color);
     color: #FFFFFF;
-    border-color: var(--primary-orange);
-    box-shadow: 0 0 0 4px rgba(255, 122, 0, 0.2);
+    border-color: var(--active-theme-color);
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.08);
 }
 
 .step.active .step-label {
-    color: var(--primary-orange);
+    color: var(--active-theme-color);
 }
 
 .step.completed .step-icon {
-    background: var(--primary-blue);
+    background: var(--dark-blue);
     color: #FFFFFF;
-    border-color: var(--primary-blue);
+    border-color: var(--dark-blue);
 }
 
 .step.completed .step-label {
-    color: var(--primary-blue);
+    color: var(--dark-blue);
 }
 
 .step-line {
@@ -178,7 +207,7 @@ body {
     position: absolute;
     top: 15px;
     right: 15px;
-    accent-color: var(--primary-orange);
+    accent-color: var(--active-theme-color);
 }
 
 .profile-icon {
@@ -201,12 +230,12 @@ body {
 }
 
 .profile-card.active {
-    border-color: var(--primary-orange);
-    background: #FFF8F3;
+    border-color: var(--active-theme-color);
+    background: #F8FAFC;
 }
 
 .profile-card.active .profile-icon {
-    color: var(--primary-orange);
+    color: var(--active-theme-color);
 }
 
 .form-grid {
@@ -232,8 +261,9 @@ body {
 }
 
 .form-group label i {
-    color: var(--primary-blue);
+    color: var(--active-theme-color);
     margin-right: 4px;
+    transition: color 0.4s ease;
 }
 
 .form-group input,
@@ -250,7 +280,7 @@ body {
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-    border-color: var(--primary-blue);
+    border-color: var(--active-theme-color);
     box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.15);
 }
 
@@ -324,24 +354,24 @@ body {
 }
 
 .btn-primary {
-    background: var(--primary-orange);
+    background: var(--active-theme-color);
     color: #FFFFFF;
 }
 
 .btn-primary:hover {
-    background: var(--primary-orange-hover);
+    background: var(--active-theme-hover);
 }
 
 .btn-secondary-sm {
-    background: #E0F2FE;
-    color: var(--primary-blue);
+    background: #F1F5F9;
+    color: var(--active-theme-color);
     padding: 8px 12px;
     font-size: 0.82rem;
     border-radius: var(--radius-sm);
 }
 
 .btn-secondary-sm:hover {
-    background: #BAE6FD;
+    background: #E2E8F0;
 }
 
 .btn-outline {
@@ -376,9 +406,10 @@ body {
 }
 
 .login-prompt a {
-    color: var(--primary-blue);
+    color: var(--active-theme-color);
     font-weight: 700;
     text-decoration: none;
+    transition: color 0.4s ease;
 }
 
 .login-prompt a:hover {
@@ -386,7 +417,7 @@ body {
 }
 
 @media (max-width: 650px) {
-    .register-container {
+    .form-body {
         padding: 25px 18px;
     }
 

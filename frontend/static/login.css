@@ -16,6 +16,24 @@
     --shadow-card: 0 20px 30px -10px rgba(0, 102, 204, 0.15);
 }
 
+/* ==========================================================================
+   Variáveis Temáticas Dinâmicas
+   ========================================================================== */
+
+body.theme-adotante {
+    --active-theme-color: var(--primary-orange);
+    --active-theme-hover: var(--primary-orange-hover);
+    --brand-bg-gradient: linear-gradient(135deg, #FF7A00 0%, #C85000 100%);
+    --brand-accent-color: #0066CC;
+}
+
+body.theme-instituicao {
+    --active-theme-color: var(--primary-blue);
+    --active-theme-hover: var(--primary-blue-hover);
+    --brand-bg-gradient: linear-gradient(135deg, #0066CC 0%, #004080 100%);
+    --brand-accent-color: #FF7A00;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -46,7 +64,7 @@ body {
 
 .brand-side {
     flex: 1;
-    background: linear-gradient(135deg, var(--primary-blue) 0%, #004080 100%);
+    background: var(--brand-bg-gradient);
     color: #FFFFFF;
     padding: 50px 40px;
     display: flex;
@@ -55,6 +73,7 @@ body {
     align-items: center;
     position: relative;
     text-align: center;
+    transition: background 0.4s ease;
 }
 
 .brand-content {
@@ -72,7 +91,8 @@ body {
 
 .paw-logo {
     font-size: 2.8rem;
-    color: var(--primary-orange);
+    color: var(--brand-accent-color);
+    transition: color 0.4s ease;
 }
 
 .logo h1 {
@@ -82,7 +102,8 @@ body {
 }
 
 .logo h1 span {
-    color: var(--primary-orange);
+    color: var(--brand-accent-color);
+    transition: color 0.4s ease;
 }
 
 .tagline {
@@ -107,8 +128,9 @@ body {
 
 .heart-icon {
     font-size: 1.8rem;
-    color: var(--primary-orange);
+    color: var(--brand-accent-color);
     animation: pulse 1.8s infinite;
+    transition: color 0.4s ease;
 }
 
 @keyframes pulse {
@@ -175,8 +197,8 @@ body {
 
 .profile-btn.active {
     background: var(--card-bg);
-    color: var(--primary-orange);
-    border-color: var(--primary-orange);
+    color: var(--active-theme-color);
+    border-color: var(--active-theme-color);
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
@@ -197,8 +219,9 @@ body {
 }
 
 .form-group label i {
-    color: var(--primary-blue);
+    color: var(--active-theme-color);
     margin-right: 4px;
+    transition: color 0.4s ease;
 }
 
 .form-group input[type="email"],
@@ -214,7 +237,7 @@ body {
 
 .form-group input:focus,
 .password-input-wrapper input:focus {
-    border-color: var(--primary-blue);
+    border-color: var(--active-theme-color);
     box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.15);
 }
 
@@ -256,13 +279,14 @@ body {
 }
 
 .remember-me input {
-    accent-color: var(--primary-orange);
+    accent-color: var(--active-theme-color);
 }
 
 .forgot-password {
-    color: var(--primary-blue);
+    color: var(--active-theme-color);
     text-decoration: none;
     font-weight: 600;
+    transition: color 0.4s ease;
 }
 
 .forgot-password:hover {
@@ -272,7 +296,7 @@ body {
 .btn-submit {
     width: 100%;
     padding: 14px;
-    background-color: var(--primary-orange);
+    background-color: var(--active-theme-color);
     color: #FFFFFF;
     border: none;
     border-radius: var(--radius-sm);
@@ -283,11 +307,11 @@ body {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    transition: background-color 0.2s ease, transform 0.1s ease;
+    transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
 .btn-submit:hover {
-    background-color: var(--primary-orange-hover);
+    background-color: var(--active-theme-hover);
     transform: translateY(-1px);
 }
 
@@ -303,9 +327,10 @@ body {
 }
 
 .register-prompt a {
-    color: var(--primary-blue);
+    color: var(--active-theme-color);
     font-weight: 700;
     text-decoration: none;
+    transition: color 0.4s ease;
 }
 
 .register-prompt a:hover {

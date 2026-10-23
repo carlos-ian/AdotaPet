@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="theme-adotante">
 
     <div class="login-container">
         <div class="brand-side">
@@ -106,6 +106,7 @@
             const btnInstituicao = document.getElementById('btn-instituicao');
             const hiddenInput = document.getElementById('tipo_usuario');
             const submitBtnText = document.querySelector('#submitBtn span');
+            const body = document.body;
 
             hiddenInput.value = profileType;
 
@@ -113,10 +114,14 @@
                 btnAdotante.classList.add('active');
                 btnInstituicao.classList.remove('active');
                 submitBtnText.textContent = 'Entrar como Adotante';
+                body.classList.remove('theme-instituicao');
+                body.classList.add('theme-adotante');
             } else {
                 btnInstituicao.classList.add('active');
                 btnAdotante.classList.remove('active');
                 submitBtnText.textContent = 'Entrar como Instituição';
+                body.classList.remove('theme-adotante');
+                body.classList.add('theme-instituicao');
             }
         }
 
