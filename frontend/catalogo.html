@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdotaPet - Catálogo de Animais para Adoção</title>
+    <link rel="stylesheet" href="static/catalogo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="theme-adotante">
+
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <i class="fa-solid fa-paw paw-logo"></i>
+                <span>Adota<strong>Pet</strong></span>
+            </a>
+            
+            <nav class="nav-menu">
+                <a href="#" class="nav-link active"><i class="fa-solid fa-store"></i> Encontrar Pets</a>
+                <a href="#" class="nav-link"><i class="fa-solid fa-heart"></i> Minhas Adoções</a>
+                <a href="#" class="nav-link"><i class="fa-solid fa-hand-holding-dollar"></i> Apadrinhamentos</a>
+            </nav>
+
+            <div class="user-menu">
+                <div class="user-info">
+                    <span class="user-name" id="navUserName">Adotante</span>
+                    <span class="user-role">Perfil Adotante</span>
+                </div>
+                <a href="login.html" class="btn-logout" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="banner-section">
+            <div class="banner-text">
+                <h2>Encontre seu novo melhor amigo 🐾</h2>
+                <p>Navegue pelos animais resgatados por ONGs e parceiros cadastrados no AdotaPet e solicite uma adoção responsável ou apadrinhamento.</p>
+            </div>
+        </section>
+
+        <!-- Bloco de Estatísticas Atualizado -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon orange"><i class="fa-solid fa-paw"></i></div>
+                <div class="stat-info">
+                    <h3>+185 mil</h3>
+                    <p>Animais sob tutela de ONGs no Brasil</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon blue"><i class="fa-solid fa-heart-circle-check"></i></div>
+                <div class="stat-info">
+                    <h3>94%</h3>
+                    <p>Taxa de adoções bem-sucedidas com acompanhamento</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green"><i class="fa-solid fa-file-medical"></i></div>
+                <div class="stat-info">
+                    <h3>100%</h3>
+                    <p>Prontuário clínico e histórico de saúde auditados</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quadro de Notícias Causa Animal -->
+        <section class="news-section">
+            <div class="news-header">
+                <h3><i class="fa-solid fa-newspaper"></i> Notícias & Acontecimentos no Brasil</h3>
+                <span class="news-badge">Atualizado</span>
+            </div>
+            <div class="news-grid">
+                <article class="news-card">
+                    <span class="news-date">Adoção Responsável</span>
+                    <h4>Campanhas de microchipagem gratuita crescem nas capitais brasileiras</h4>
+                    <p>Iniciativas municipais visam aumentar a rastreabilidade e combater o abandono de pets em áreas urbanas.</p>
+                </article>
+                <article class="news-card">
+                    <span class="news-date">Legislação</span>
+                    <h4>Aumento na fiscalização contra maus-tratos a animais de pequeno porte</h4>
+                    <p>Delegacias especializadas intensificam resgates em parceria com ONGs e abrigos credenciados.</p>
+                </article>
+                <article class="news-card">
+                    <span class="news-date">Eventos</span>
+                    <h4>Feiras de adoção integrada movimentam ONGs neste final de semana</h4>
+                    <p>Mais de 50 instituições participam de mutirões presenciais e virtuais para encontrar novos lares.</p>
+                </article>
+            </div>
+        </section>
+
+        <!-- Card de Curiosidades Multiespécies -->
+        <section class="pet-fact-card">
+            <div class="fact-header">
+                <i class="fa-solid fa-lightbulb fact-icon"></i>
+                <div>
+                    <h4>Curiosidades & Fatos Animal 🇧🇷🐶🐱🐰🦜</h4>
+                    <p id="factText">Carregando uma curiosidade incrível sobre os animais...</p>
+                </div>
+            </div>
+            <button type="button" class="btn-refresh-fact" onclick="loadPetFact()">
+                <i class="fa-solid fa-rotate"></i> Outra curiosidade
+            </button>
+        </section>
+
+        <!-- Barra de Busca e Filtros com Espécies Expandidas -->
+        <section class="search-filter-section">
+            <div class="search-bar-wrapper">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="searchInput" placeholder="Busque por nome do pet, raça ou nome da ONG/Instituição..." oninput="filterPets()">
+            </div>
+
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label for="filterEspecie"><i class="fa-solid fa-paw"></i> Espécie</label>
+                    <select id="filterEspecie" onchange="filterPets()">
+                        <option value="">Todas as espécies</option>
+                        <option value="Cão">Cão</option>
+                        <option value="Gato">Gato</option>
+                        <option value="Coelho">Coelho</option>
+                        <option value="Ave">Ave</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="filterPorte"><i class="fa-solid fa-weight-hanging"></i> Porte</label>
+                    <select id="filterPorte" onchange="filterPets()">
+                        <option value="">Todos os portes</option>
+                        <option value="Pequeno">Pequeno</option>
+                        <option value="Médio">Médio</option>
+                        <option value="Grande">Grande</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="filterSexo"><i class="fa-solid fa-venus-mars"></i> Sexo</label>
+                    <select id="filterSexo" onchange="filterPets()">
+                        <option value="">Ambos os sexos</option>
+                        <option value="M">Macho</option>
+                        <option value="F">Fêmea</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="filterStatus"><i class="fa-solid fa-filter"></i> Status / Finalidade</label>
+                    <select id="filterStatus" onchange="filterPets()">
+                        <option value="">Todos os status</option>
+                        <option value="Disponível">Disponível para Adoção</option>
+                        <option value="Disponível para Apadrinhamento">Disponível para Apadrinhamento</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <section class="catalog-section">
+            <div class="section-header">
+                <h3>Animais Cadastrados (<span id="petCount">0</span>)</h3>
+            </div>
+
+            <div class="pet-grid" id="petGridContainer"></div>
+
+            <div id="noResults" class="no-results hidden">
+                <i class="fa-solid fa-face-frown empty-icon"></i>
+                <h4>Nenhum pet encontrado</h4>
+                <p>Tente ajustar seus filtros de busca para encontrar outros companheiros.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const mockPets = [
+            {
+                id_animal: 1,
+                nome: "Thor",
+                especie: "Cão",
+                raca: "Vira-lata (SRD)",
+                idade: 2,
+                porte: "Médio",
+                sexo: "M",
+                status: "Disponível",
+                observacao: "Muito dócil, brincalhão e sociável com outros cachorros.",
+                instituicao: "ONG Patas de Luz",
+                foto: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id_animal: 2,
+                nome: "Luna",
+                especie: "Gato",
+                raca: "Siamês",
+                idade: 1,
+                porte: "Pequeno",
+                sexo: "F",
+                status: "Disponível",
+                observacao: "Calma, gosta de carinho e já está vermifugada e castrada.",
+                instituicao: "Abrigo Amigo Animal",
+                foto: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id_animal: 3,
+                nome: "Bob",
+                especie: "Cão",
+                raca: "Golden Retriever",
+                idade: 4,
+                porte: "Grande",
+                sexo: "M",
+                status: "Disponível para Apadrinhamento",
+                observacao: "Em acompanhamento fisioterapêutico. Ótimo candidato a apadrinhamento.",
+                instituicao: "ONG Resgate & Vida",
+                foto: "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id_animal: 4,
+                nome: "Pompom",
+                especie: "Coelho",
+                raca: "Mini Lion Head",
+                idade: 1,
+                porte: "Pequeno",
+                sexo: "M",
+                status: "Disponível",
+                observacao: "Muito carinhoso, acostumado com ambiente interno e feno limpo.",
+                instituicao: "ONG Patas de Luz",
+                foto: "https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id_animal: 5,
+                nome: "Pita",
+                especie: "Ave",
+                raca: "Calopsita",
+                idade: 2,
+                porte: "Pequeno",
+                sexo: "F",
+                status: "Disponível",
+                observacao: "Resgatada de cativeiro irregular, assobia melodias simples.",
+                instituicao: "Projeto Proteção Pet",
+                foto: "https://images.unsplash.com/photo-1522858547137-f1dcec554f55?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id_animal: 6,
+                nome: "Mel",
+                especie: "Gato",
+                raca: "Persa",
+                idade: 3,
+                porte: "Pequeno",
+                sexo: "F",
+                status: "Disponível para Apadrinhamento",
+                observacao: "Aguardando cirurgia odontológica preventiva. Apadrinhe o tratamento!",
+                instituicao: "Abrigo Amigo Animal",
+                foto: "https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=600&q=80"
+            }
+        ];
+
+        const brasilPetFacts = [
+            "O Brasil possui mais de 149 milhões de animais de estimação, sendo o 3º país com a maior população de pets no mundo!",
+            "Os Vira-Latas (Sem Raça Definida - SRD) representam mais de 40% dos cães e gatos nos lares brasileiros.",
+            "Os coelhos usam saltos e giros no ar (comportamento chamado 'binky') para expressar extrema felicidade!",
+            "Calopsitas e papagaios conseguem reconhecer rostos humanos e associar vozes específicas a seus tutores.",
+            "A castração preventiva reduz em até 90% o risco de tumores e evita fugas e comportamentos agressivos.",
+            "Os gatos não possuem receptores para o sabor doce e usam seus bigodes para medir a largura dos espaços.",
+            "O olfato de um cachorro é até 100 mil vezes mais apurado que o nosso, conseguindo detectar variações de odor humano.",
+            "Apadrinhar um pet ajuda ONGs a cobrirem custos com ração, vacinas e tratamentos enquanto o animal aguarda adoção."
+        ];
+
+        let lastFactIndex = -1;
+
+        function getSpeciesIcon(especie) {
+            switch(especie) {
+                case 'Cão': return 'fa-dog';
+                case 'Gato': return 'fa-cat';
+                case 'Coelho': return 'fa-feather';
+                case 'Ave': return 'fa-dove';
+                default: return 'fa-paw';
+            }
+        }
+
+        function renderPets(pets) {
+            const container = document.getElementById('petGridContainer');
+            const petCount = document.getElementById('petCount');
+            const noResults = document.getElementById('noResults');
+
+            container.innerHTML = '';
+            petCount.textContent = pets.length;
+
+            if (pets.length === 0) {
+                noResults.classList.remove('hidden');
+                return;
+            }
+
+            noResults.classList.add('hidden');
+
+            pets.forEach(pet => {
+                const card = document.createElement('div');
+                card.className = 'pet-card';
+
+                const statusBadgeClass = pet.status === 'Disponível' ? 'badge-available' : 'badge-sponsorship';
+
+                card.innerHTML = `
+                    <div class="pet-card-image">
+                        <img src="${pet.foto}" alt="${pet.nome}">
+                        <span class="badge ${statusBadgeClass}">${pet.status}</span>
+                        <span class="badge-species"><i class="fa-solid ${getSpeciesIcon(pet.especie)}"></i> ${pet.especie}</span>
+                    </div>
+                    <div class="pet-card-content">
+                        <div class="pet-header">
+                            <h4 class="pet-name">${pet.nome}</h4>
+                            <span class="pet-gender ${pet.sexo === 'M' ? 'male' : 'female'}">
+                                <i class="fa-solid ${pet.sexo === 'M' ? 'fa-mars' : 'fa-venus'}"></i>
+                            </span>
+                        </div>
+                        <p class="pet-breed"><i class="fa-solid fa-dna"></i> ${pet.raca}</p>
+                        
+                        <div class="pet-tags">
+                            <span class="tag"><i class="fa-solid fa-cake-candles"></i> ${pet.idade} ano(s)</span>
+                            <span class="tag"><i class="fa-solid fa-ruler-vertical"></i> Porte ${pet.porte}</span>
+                        </div>
+
+                        <p class="pet-obs">${pet.observacao}</p>
+
+                        <div class="pet-ong">
+                            <i class="fa-solid fa-building-ngo"></i> ${pet.instituicao}
+                        </div>
+
+                        <div class="pet-actions">
+                            <a href="detalhes-pet.html?id=${pet.id_animal}" class="btn-details">
+                                Ver Prontuário & Detalhes
+                            </a>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterPets() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const especie = document.getElementById('filterEspecie').value;
+            const porte = document.getElementById('filterPorte').value;
+            const sexo = document.getElementById('filterSexo').value;
+            const status = document.getElementById('filterStatus').value;
+
+            const filtered = mockPets.filter(pet => {
+                const matchesSearch = pet.nome.toLowerCase().includes(search) || 
+                                      pet.raca.toLowerCase().includes(search) || 
+                                      pet.instituicao.toLowerCase().includes(search);
+
+                const matchesEspecie = !especie || pet.especie === especie;
+                const matchesPorte = !porte || pet.porte === porte;
+                const matchesSexo = !sexo || pet.sexo === sexo;
+                const matchesStatus = !status || pet.status === status;
+
+                return matchesSearch && matchesEspecie && matchesPorte && matchesSexo && matchesStatus;
+            });
+
+            renderPets(filtered);
+        }
+
+        function loadPetFact() {
+            const factText = document.getElementById('factText');
+            let randomIndex;
+            
+            do {
+                randomIndex = Math.floor(Math.random() * brasilPetFacts.length);
+            } while (randomIndex === lastFactIndex && brasilPetFacts.length > 1);
+
+            lastFactIndex = randomIndex;
+            factText.textContent = `"${brasilPetFacts[randomIndex]}"`;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderPets(mockPets);
+            loadPetFact();
+
+            const session = JSON.parse(localStorage.getItem('adotapet_session'));
+            if (session && session.email) {
+                document.getElementById('navUserName').textContent = session.email.split('@')[0];
+            }
+        });
+    </script>
+</body>
+</html>
