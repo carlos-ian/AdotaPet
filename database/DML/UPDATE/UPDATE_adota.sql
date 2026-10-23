@@ -4,18 +4,18 @@ WHERE id_adotante = 1 AND id_animal = 1;
 
 UPDATE adota 
 SET status = 'Em Análise' 
-WHERE status = 'Reprovado';
+WHERE status = 'Recusado';
 
 UPDATE adota 
 SET observacao_do_processo = 'Entrevista presencial realizada. Agendada visita domiciliar.' 
 WHERE id_adotante = 2 AND id_animal = 3;
 
 UPDATE adota 
-SET status = 'Em Visita Domiciliar' 
-WHERE status = 'Solicitado';
+SET status = 'Em Análise' 
+WHERE status = 'Solicitada';
 
 UPDATE adota 
-SET data_solicitacao = '2025-01-20', observacao_do_processo = 'Documentação validada com sucesso.' 
+SET data_de_solicitacao = '2025-01-20', observacao_do_processo = 'Documentação validada com sucesso.' 
 WHERE id_adotante = 3 AND id_animal = 4;
 
 UPDATE adota 
@@ -23,15 +23,15 @@ SET status = 'Cancelado', observacao_do_processo = 'Desistência por parte do ad
 WHERE id_adotante = 4 AND id_animal = 5;
 
 UPDATE adota 
-SET status = 'Concluído', data_de_conclusao = '2025-02-20' 
+SET status = 'Aprovado', data_de_conclusao = '2025-02-20' 
 WHERE id_adotante = 5 AND id_animal = 6;
 
 UPDATE adota 
 SET observacao_do_processo = 'Aguardando envio do comprovante de residência.' 
-WHERE status = 'Pendente';
+WHERE status = 'Em Análise';
 
 UPDATE adota 
-SET data_solicitacao = '2025-02-01' 
+SET data_de_solicitacao = '2025-02-01' 
 WHERE id_adotante = 6 AND id_animal = 7;
 
 UPDATE adota 
