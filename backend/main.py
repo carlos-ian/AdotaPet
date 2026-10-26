@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
 from database import init_db, close_db, get_pool
-from schemas import LoginSchema, RegistroSchema
+from schemas import LoginSchema, RegistroSchema, AdocaoSchema, ApadrinhamentoSchema
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -153,7 +153,7 @@ async def autenticar_usuario(dados: LoginSchema):
                     usuario["id_usuario"]
                 )
                 nome_display = adot["nome"] if adot and adot["nome"] else "Adotante"
-                redirect_page = "painel-adotante.html"
+                redirect_page = "dashboard-adotante.html"
 
             return {
                 "mensagem": "Login realizado com sucesso!",
@@ -256,3 +256,628 @@ async def registrar_usuario(dados: RegistroSchema):
             except Exception as e:
                 print(f"Erro ao registrar usuário: {e}")
                 raise HTTPException(status_code=500, detail="Erro interno ao gravar dados do usuário.")
+
+@app.get("/api/dashboard/estatisticas-brasil")
+async def obter_estatisticas_brasil():
+    return {
+        "animaisSobTutela": "+185 mil",
+        "taxaSucesso": "94%",
+        "prontuariosAuditados": "100%"
+    }
+
+@app.get("/api/animais")
+async def listar_animais(busca: str = None, especie: str = None, porte: str = None, sexo: str = None, status: str = None):
+    pool = get_pool()
+    if not pool:
+        raise HTTPException(status_code=500, detail="Banco de dados não conectado")
+
+    query = """
+        SELECT 
+            a.id_animal,
+            a.nome,
+            a.especie,
+            a.raca,
+            a.idade,
+            a.porte,
+            a.sexo,
+            a.status as status_db,
+            a.observacao,
+            i.id_usuario as id_instituicao,
+            i.razao_social as instituicao,
+            i.selo_verificacao as ong_verificada,
+            u.cidade,
+            u.estado,
+            (SELECT COUNT(*) FROM apadrinha ap WHERE ap.id_animal = a.id_animal AND ap.status = 'Ativo') as padrinhos_ativos,
+            (SELECT COUNT(*) FROM adota ad WHERE ad.id_animal = a.id_animal AND ad.status IN ('Aprovada', 'Aprovado')) as adocoes_aprovadas
+        FROM animal a
+        LEFT JOIN instituicao i ON a.id_instituicao = i.id_usuario
+        LEFT JOIN usuario u ON i.id_usuario = u.id_usuario
+        ORDER BY a.id_animal;
+    """
+
+    async with pool.acquire() as conn:
+        try:
+            rows = await conn.fetch(query)
+            resultado = []
+            
+            fotos_especies = {
+                "cão": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80",
+                "gato": "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=80",
+                "coelho": "https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?auto=format&fit=crop&w=600&q=80",
+                "ave": "https://images.unsplash.com/photo-1522858547137-f1dcec554f55?auto=format&fit=crop&w=600&q=80",
+                "papagaio": "https://images.unsplash.com/photo-1552728089-57bdde30beb3?auto=format&fit=crop&w=600&q=80",
+                "calopsita": "https://images.unsplash.com/photo-1522858547137-f1dcec554f55?auto=format&fit=crop&w=600&q=80",
+                "hamster": "https://images.unsplash.com/photo-1548767797-d8c844163c4c?auto=format&fit=crop&w=600&q=80",
+                "porquinho-da-índia": "https://images.unsplash.com/photo-1548767797-d8c844163c4c?auto=format&fit=crop&w=600&q=80"
+            }
+
+            for r in rows:
+                padrinhos = r["padrinhos_ativos"]
+                adocoes = r["adocoes_aprovadas"]
+                st_db = (r["status_db"] or "").lower()
+                
+                if "adotado" in st_db or adocoes > 0:
+                    status_bloco = "Adotado"
+                elif padrinhos > 0:
+                    status_bloco = "Ambos"
+                else:
+                    status_bloco = "Adoção"
+
+                esp = (r["especie"] or "").lower()
+                foto_url = fotos_especies.get(esp, "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80")
+                
+                if "golden" in (r["raca"] or "").lower():
+                    foto_url = "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=600&q=80"
+                elif "siamês" in (r["raca"] or "").lower():
+                    foto_url = "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=80"
+                elif "persa" in (r["raca"] or "").lower():
+                    foto_url = "https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=600&q=80"
+
+                item = {
+                    "id_animal": r["id_animal"],
+                    "nome": r["nome"],
+                    "especie": r["especie"],
+                    "raca": r["raca"],
+                    "idade": r["idade"],
+                    "porte": r["porte"],
+                    "sexo": r["sexo"],
+                    "status": status_bloco,
+                    "status_original": r["status_db"],
+                    "observacao": r["observacao"],
+                    "instituicao": r["instituicao"] or "Instituição Parceira",
+                    "id_instituicao": r["id_instituicao"],
+                    "cidade": r["cidade"],
+                    "estado": r["estado"],
+                    "ong_verificada": r["ong_verificada"],
+                    "foto": foto_url
+                }
+
+                if busca:
+                    b = busca.lower()
+                    if not (b in item["nome"].lower() or b in (item["raca"] or "").lower() or b in item["instituicao"].lower()):
+                        continue
+                if especie and item["especie"].lower() != especie.lower():
+                    if not (especie.lower() == "ave" and item["especie"].lower() in ["ave", "papagaio", "calopsita"]):
+                        continue
+                if porte and (item["porte"] or "").lower() != porte.lower():
+                    continue
+                if sexo and (item["sexo"] or "").upper() != sexo.upper():
+                    continue
+                if status and item["status"].lower() != status.lower():
+                    continue
+
+                resultado.append(item)
+
+            return resultado
+        except Exception as e:
+            print(f"Erro ao listar animais: {e}")
+            raise HTTPException(status_code=500, detail="Erro ao consultar animais.")
+
+@app.get("/api/animais/{id_animal}")
+async def obter_detalhes_animal(id_animal: int):
+    pool = get_pool()
+    if not pool:
+        raise HTTPException(status_code=500, detail="Banco de dados não conectado")
+
+    query_animal = """
+        SELECT 
+            a.id_animal,
+            a.nome,
+            a.especie,
+            a.raca,
+            a.idade,
+            a.porte,
+            a.sexo,
+            a.status as status_db,
+            a.observacao,
+            i.id_usuario as id_instituicao,
+            i.razao_social as instituicao_nome,
+            i.cnpj as instituicao_cnpj,
+            i.selo_verificacao as instituicao_verificada,
+            u.rua,
+            u.numero,
+            u.bairro,
+            u.cidade,
+            u.estado,
+            u.cep,
+            (SELECT COUNT(*) FROM apadrinha ap WHERE ap.id_animal = a.id_animal AND ap.status = 'Ativo') as padrinhos_ativos,
+            (SELECT COUNT(*) FROM adota ad WHERE ad.id_animal = a.id_animal AND ad.status IN ('Aprovada', 'Aprovado')) as adocoes_aprovadas
+        FROM animal a
+        LEFT JOIN instituicao i ON a.id_instituicao = i.id_usuario
+        LEFT JOIN usuario u ON i.id_usuario = u.id_usuario
+        WHERE a.id_animal = $1;
+    """
+
+    query_prontuario = """
+        SELECT 
+            data_procedimento,
+            tipo_procedimento,
+            descricao
+        FROM prontuario_veterinario
+        WHERE id_animal = $1
+        ORDER BY data_procedimento DESC;
+    """
+
+    query_telefones = """
+        SELECT telefone FROM usuario_telefone WHERE id_usuario = $1;
+    """
+
+    async with pool.acquire() as conn:
+        try:
+            animal = await conn.fetchrow(query_animal, id_animal)
+            if not animal:
+                raise HTTPException(status_code=404, detail="Animal não encontrado.")
+
+            prontuarios = await conn.fetch(query_prontuario, id_animal)
+            telefones_raw = await conn.fetch(query_telefones, animal["id_instituicao"])
+            telefones = [t["telefone"] for t in telefones_raw] if telefones_raw else []
+
+            padrinhos = animal["padrinhos_ativos"]
+            adocoes = animal["adocoes_aprovadas"]
+            st_db = (animal["status_db"] or "").lower()
+            if "adotado" in st_db or adocoes > 0:
+                status_bloco = "Adotado"
+            elif padrinhos > 0:
+                status_bloco = "Ambos"
+            else:
+                status_bloco = "Adoção"
+
+            fotos_especies = {
+                "cão": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80",
+                "gato": "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=800&q=80",
+                "coelho": "https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?auto=format&fit=crop&w=800&q=80",
+                "ave": "https://images.unsplash.com/photo-1522858547137-f1dcec554f55?auto=format&fit=crop&w=800&q=80",
+                "papagaio": "https://images.unsplash.com/photo-1552728089-57bdde30beb3?auto=format&fit=crop&w=800&q=80",
+                "calopsita": "https://images.unsplash.com/photo-1522858547137-f1dcec554f55?auto=format&fit=crop&w=800&q=80",
+                "hamster": "https://images.unsplash.com/photo-1548767797-d8c844163c4c?auto=format&fit=crop&w=800&q=80",
+                "porquinho-da-índia": "https://images.unsplash.com/photo-1548767797-d8c844163c4c?auto=format&fit=crop&w=800&q=80"
+            }
+            esp = (animal["especie"] or "").lower()
+            foto_principal = fotos_especies.get(esp, "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80")
+            if "golden" in (animal["raca"] or "").lower():
+                foto_principal = "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=800&q=80"
+            elif "siamês" in (animal["raca"] or "").lower():
+                foto_principal = "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=800&q=80"
+            elif "persa" in (animal["raca"] or "").lower():
+                foto_principal = "https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=800&q=80"
+
+            endereco_partes = [animal["rua"], animal["numero"], animal["bairro"], animal["cidade"], animal["estado"]]
+            endereco_formatado = ", ".join([p for p in endereco_partes if p]) or "Não informado"
+
+            return {
+                "id_animal": animal["id_animal"],
+                "nome": animal["nome"],
+                "especie": animal["especie"],
+                "raca": animal["raca"],
+                "idade": f"{animal['idade']} ano(s)" if animal["idade"] else "Não informada",
+                "porte": animal["porte"],
+                "sexo": animal["sexo"],
+                "status": status_bloco,
+                "status_original": animal["status_db"],
+                "observacao": animal["observacao"],
+                "fotos": [
+                    foto_principal,
+                    "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=800&q=80",
+                    "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=800&q=80"
+                ],
+                "prontuario": [
+                    {
+                        "data": p["data_procedimento"].strftime("%d/%m/%Y"),
+                        "procedimento": p["tipo_procedimento"],
+                        "descricao": p["descricao"] or "Procedimento realizado com sucesso."
+                    }
+                    for p in prontuarios
+                ],
+                "instituicao": {
+                    "id_usuario": animal["id_instituicao"],
+                    "razao_social": animal["instituicao_nome"] or "Instituição Parceira",
+                    "cnpj": animal["instituicao_cnpj"] or "Não informado",
+                    "selo_verificacao": animal["instituicao_verificada"],
+                    "endereco": endereco_formatado,
+                    "telefone": telefones[0] if telefones else "Não informado"
+                }
+            }
+        except HTTPException as h:
+            raise h
+        except Exception as e:
+            print(f"Erro ao obter detalhes do animal: {e}")
+            raise HTTPException(status_code=500, detail="Erro ao consultar detalhes do animal.")
+
+@app.get("/api/instituicoes")
+async def listar_instituicoes(busca: str = None, cidade: str = None, estado: str = None):
+    pool = get_pool()
+    if not pool:
+        raise HTTPException(status_code=500, detail="Banco de dados não conectado")
+
+    query = """
+        SELECT 
+            i.id_usuario,
+            i.cnpj,
+            i.razao_social,
+            i.selo_verificacao,
+            u.email,
+            u.rua,
+            u.numero,
+            u.bairro,
+            u.cidade,
+            u.estado,
+            u.cep,
+            (SELECT COUNT(*) FROM animal a WHERE a.id_instituicao = i.id_usuario) as total_animais,
+            (SELECT COUNT(*) FROM animal a WHERE a.id_instituicao = i.id_usuario AND a.status = 'Disponível') as animais_disponiveis
+        FROM instituicao i
+        JOIN usuario u ON i.id_usuario = u.id_usuario
+        ORDER BY i.razao_social;
+    """
+
+    async with pool.acquire() as conn:
+        try:
+            rows = await conn.fetch(query)
+            resultado = []
+            for r in rows:
+                tels_raw = await conn.fetch("SELECT telefone FROM usuario_telefone WHERE id_usuario = $1", r["id_usuario"])
+                tels = [t["telefone"] for t in tels_raw] if tels_raw else []
+
+                item = {
+                    "id_usuario": r["id_usuario"],
+                    "razao_social": r["razao_social"],
+                    "cnpj": r["cnpj"],
+                    "selo_verificacao": r["selo_verificacao"],
+                    "email": r["email"],
+                    "rua": r["rua"],
+                    "numero": r["numero"],
+                    "bairro": r["bairro"],
+                    "cidade": r["cidade"],
+                    "estado": r["estado"],
+                    "cep": r["cep"],
+                    "telefones": tels,
+                    "total_animais": r["total_animais"],
+                    "animais_disponiveis": r["animais_disponiveis"]
+                }
+
+                if busca:
+                    b = busca.lower()
+                    if not (b in (item["razao_social"] or "").lower() or b in (item["cidade"] or "").lower() or b in (item["cnpj"] or "").lower()):
+                        continue
+                if cidade and (item["cidade"] or "").lower() != cidade.lower():
+                    continue
+                if estado and (item["estado"] or "").upper() != estado.upper():
+                    continue
+
+                resultado.append(item)
+            return resultado
+        except Exception as e:
+            print(f"Erro ao listar instituições: {e}")
+            raise HTTPException(status_code=500, detail="Erro ao consultar instituições.")
+
+@app.get("/api/adotante/{id_usuario}")
+async def obter_perfil_adotante(id_usuario: int):
+    pool = get_pool()
+    if not pool:
+        raise HTTPException(status_code=500, detail="Banco de dados não conectado")
+
+    query_adotante = """
+        SELECT 
+            a.id_usuario,
+            a.nome,
+            a.cpf,
+            a.tipo_residencia,
+            u.email,
+            u.rua,
+            u.numero,
+            u.bairro,
+            u.cep,
+            u.cidade,
+            u.estado,
+            u.complemento
+        FROM adotante a
+        JOIN usuario u ON a.id_usuario = u.id_usuario
+        WHERE a.id_usuario = $1;
+    """
+
+    async with pool.acquire() as conn:
+        try:
+            adot = await conn.fetchrow(query_adotante, id_usuario)
+            if not adot:
+                raise HTTPException(status_code=404, detail="Adotante não encontrado.")
+
+            tels_raw = await conn.fetch("SELECT telefone FROM usuario_telefone WHERE id_usuario = $1", id_usuario)
+            telefones = [t["telefone"] for t in tels_raw] if tels_raw else []
+
+            historico_raw = await conn.fetch("SELECT descricao FROM adotante_historico_pets WHERE id_usuario = $1", id_usuario)
+            historico = " ".join([h["descricao"] for h in historico_raw]) if historico_raw else "Nenhum histórico registrado."
+
+            return {
+                "id_usuario": adot["id_usuario"],
+                "nome": adot["nome"],
+                "cpf": adot["cpf"],
+                "tipo_residencia": adot["tipo_residencia"],
+                "email": adot["email"],
+                "rua": adot["rua"],
+                "numero": adot["numero"],
+                "bairro": adot["bairro"],
+                "cep": adot["cep"],
+                "cidade": adot["cidade"],
+                "estado": adot["estado"],
+                "complemento": adot["complemento"],
+                "telefones": telefones,
+                "historico_pets": historico
+            }
+        except HTTPException as h:
+            raise h
+        except Exception as e:
+            print(f"Erro ao obter dados do adotante: {e}")
+            raise HTTPException(status_code=500, detail="Erro ao obter perfil do adotante.")
+
+@app.get("/api/adotante/{id_usuario}/adocoes")
+async def obter_adocoes_adotante(id_usuario: int):
+    pool = get_pool()
+    if not pool:
+        raise HTTPException(status_code=500, detail="Banco de dados não conectado")
+
+    query = """
+        SELECT 
+            ad.id_adotante,
+            ad.id_animal,
+            ad.status,
+            ad.data_de_solicitacao,
+            ad.data_de_conclusao,
+            ad.observacao_do_processo,
+            a.nome as pet_nome,
+            a.especie as pet_especie,
+            i.razao_social as ong_nome
+        FROM adota ad
+        JOIN animal a ON ad.id_animal = a.id_animal
+        JOIN instituicao i ON a.id_instituicao = i.id_usuario
+        WHERE ad.id_adotante = $1
+        ORDER BY ad.data_de_solicitacao DESC;
+    """
+
+    async with pool.acquire() as conn:
+        try:
+            rows = await conn.fetch(query, id_usuario)
+            return [
+                {
+                    "id_animal": r["id_animal"],
+                    "pet_nome": r["pet_nome"],
+                    "pet_especie": r["pet_especie"],
+                    "ong_nome": r["ong_nome"],
+                    "status": r["status"],
+                    "data_solicitacao": r["data_de_solicitacao"].strftime("%d/%m/%Y") if r["data_de_solicitacao"] else "-",
+                    "data_conclusao": r["data_de_conclusao"].strftime("%d/%m/%Y") if r["data_de_conclusao"] else "-",
+                    "observacoes": r["observacao_do_processo"] or "Em andamento"
+                }
+                for r in rows
+            ]
+        except Exception as e:
+            print(f"Erro ao consultar adoções do adotante: {e}")
+            raise HTTPException(status_code=500, detail="Erro ao consultar adoções.")
+
+@app.get("/api/adotante/{id_usuario}/apadrinhamentos")
+async def obter_apadrinhamentos_adotante(id_usuario: int):
+    pool = get_pool()
+    if not pool:
+        raise HTTPException(status_code=500, detail="Banco de dados não conectado")
+
+    query = """
+        SELECT 
+            ap.id_adotante,
+            ap.id_animal,
+            ap.tipo_de_contribuicao,
+            ap.valor_recorrente,
+            ap.frequencia,
+            ap.status,
+            ap.data_de_inicio,
+            a.nome as pet_nome,
+            a.especie as pet_especie,
+            i.razao_social as ong_nome
+        FROM apadrinha ap
+        JOIN animal a ON ap.id_animal = a.id_animal
+        JOIN instituicao i ON a.id_instituicao = i.id_usuario
+        WHERE ap.id_adotante = $1
+        ORDER BY ap.data_de_inicio DESC;
+    """
+
+    async with pool.acquire() as conn:
+        try:
+            rows = await conn.fetch(query, id_usuario)
+            return [
+                {
+                    "id_animal": r["id_animal"],
+                    "pet_nome": r["pet_nome"],
+                    "pet_especie": r["pet_especie"],
+                    "ong_nome": r["ong_nome"],
+                    "tipo_de_contribuicao": r["tipo_de_contribuicao"],
+                    "valor_recorrente": float(r["valor_recorrente"]) if r["valor_recorrente"] is not None else 0.0,
+                    "frequencia": r["frequencia"],
+                    "status": r["status"],
+                    "data_de_inicio": r["data_de_inicio"].strftime("%d/%m/%Y") if r["data_de_inicio"] else "-"
+                }
+                for r in rows
+            ]
+        except Exception as e:
+            print(f"Erro ao consultar apadrinhamentos do adotante: {e}")
+            raise HTTPException(status_code=500, detail="Erro ao consultar apadrinhamentos.")
+
+
+@app.get("/api/instituicoes/{id_instituicao}")
+async def obter_detalhes_instituicao(id_instituicao: int):
+    pool = get_pool()
+    if not pool:
+        raise HTTPException(status_code=500, detail="Banco de dados não conectado")
+
+    query_inst = """
+        SELECT 
+            i.id_usuario,
+            i.cnpj,
+            i.razao_social,
+            i.selo_verificacao,
+            u.email,
+            u.rua,
+            u.numero,
+            u.bairro,
+            u.cidade,
+            u.estado,
+            u.cep,
+            u.complemento
+        FROM instituicao i
+        JOIN usuario u ON i.id_usuario = u.id_usuario
+        WHERE i.id_usuario = $1;
+    """
+
+    query_telefones = """
+        SELECT telefone FROM usuario_telefone WHERE id_usuario = $1;
+    """
+
+    query_pets = """
+        SELECT 
+            a.id_animal,
+            a.nome,
+            a.especie,
+            a.raca,
+            a.idade,
+            a.porte,
+            a.sexo,
+            a.status as status_db,
+            a.observacao,
+            (SELECT COUNT(*) FROM apadrinha ap WHERE ap.id_animal = a.id_animal AND ap.status = 'Ativo') as padrinhos_ativos,
+            (SELECT COUNT(*) FROM adota ad WHERE ad.id_animal = a.id_animal AND ad.status IN ('Aprovada', 'Aprovado')) as adocoes_aprovadas
+        FROM animal a
+        WHERE a.id_instituicao = $1
+        ORDER BY a.id_animal;
+    """
+
+    fotos_especies = {
+        "cão": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80",
+        "gato": "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=80",
+        "coelho": "https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?auto=format&fit=crop&w=600&q=80",
+        "ave": "https://images.unsplash.com/photo-1522858547137-f1dcec554f55?auto=format&fit=crop&w=600&q=80",
+        "papagaio": "https://images.unsplash.com/photo-1552728089-57bdde30beb3?auto=format&fit=crop&w=600&q=80",
+        "calopsita": "https://images.unsplash.com/photo-1522858547137-f1dcec554f55?auto=format&fit=crop&w=600&q=80",
+        "hamster": "https://images.unsplash.com/photo-1548767797-d8c844163c4c?auto=format&fit=crop&w=600&q=80",
+        "porquinho-da-índia": "https://images.unsplash.com/photo-1548767797-d8c844163c4c?auto=format&fit=crop&w=600&q=80"
+    }
+
+    async with pool.acquire() as conn:
+        try:
+            inst = await conn.fetchrow(query_inst, id_instituicao)
+            if not inst:
+                raise HTTPException(status_code=404, detail="Instituição não encontrada.")
+
+            telefones_raw = await conn.fetch(query_telefones, id_instituicao)
+            telefones = [t["telefone"] for t in telefones_raw] if telefones_raw else []
+
+            pets_raw = await conn.fetch(query_pets, id_instituicao)
+            pets = []
+            for p in pets_raw:
+                padrinhos = p["padrinhos_ativos"]
+                adocoes = p["adocoes_aprovadas"]
+                st_db = (p["status_db"] or "").lower()
+                if "adotado" in st_db or adocoes > 0:
+                    status_bloco = "Adotado"
+                elif padrinhos > 0:
+                    status_bloco = "Ambos"
+                else:
+                    status_bloco = "Adoção"
+
+                esp = (p["especie"] or "").lower()
+                foto_url = fotos_especies.get(esp, "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80")
+                if "golden" in (p["raca"] or "").lower():
+                    foto_url = "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=600&q=80"
+                elif "siamês" in (p["raca"] or "").lower():
+                    foto_url = "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=80"
+                elif "persa" in (p["raca"] or "").lower():
+                    foto_url = "https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=600&q=80"
+
+                pets.append({
+                    "id_animal": p["id_animal"],
+                    "nome": p["nome"],
+                    "especie": p["especie"],
+                    "raca": p["raca"],
+                    "idade": f"{p['idade']} ano(s)" if p["idade"] else "Não informada",
+                    "porte": p["porte"],
+                    "sexo": p["sexo"],
+                    "status": status_bloco,
+                    "observacao": p["observacao"],
+                    "foto": foto_url
+                })
+
+            endereco_partes = [inst["rua"], inst["numero"], inst["complemento"], inst["bairro"], inst["cidade"], inst["estado"], inst["cep"]]
+            endereco_formatado = ", ".join([p for p in endereco_partes if p]) or "Não informado"
+
+            return {
+                "id_usuario": inst["id_usuario"],
+                "razao_social": inst["razao_social"],
+                "cnpj": inst["cnpj"],
+                "selo_verificacao": inst["selo_verificacao"],
+                "email": inst["email"],
+                "endereco": endereco_formatado,
+                "cidade": inst["cidade"],
+                "estado": inst["estado"],
+                "telefones": telefones,
+                "pets": pets,
+                "total_pets": len(pets)
+            }
+        except HTTPException as h:
+            raise h
+        except Exception as e:
+            print(f"Erro ao obter detalhes da instituição: {e}")
+            raise HTTPException(status_code=500, detail="Erro ao consultar detalhes da instituição.")
+
+
+@app.post("/api/adocao")
+async def submeter_adocao(dados: AdocaoSchema):
+    pool = get_pool()
+    if not pool:
+        raise HTTPException(status_code=500, detail="Banco de dados não conectado")
+    query = """
+        INSERT INTO adota (id_adotante, id_animal, status, data_de_solicitacao, observacao_do_processo, data_inclusao)
+        VALUES ($1, $2, 'Em Análise', CURRENT_DATE, $3, NOW())
+        ON CONFLICT (id_adotante, id_animal) 
+        DO UPDATE SET status = 'Em Análise', data_de_solicitacao = CURRENT_DATE, observacao_do_processo = EXCLUDED.observacao_do_processo, data_alteracao = NOW();
+    """
+    async with pool.acquire() as conn:
+        try:
+            await conn.execute(query, dados.id_adotante, dados.id_animal, dados.observacao)
+            return {"mensagem": "Solicitação de adoção registrada com sucesso!"}
+        except Exception as e:
+            print(f"Erro ao registrar adoção: {e}")
+            raise HTTPException(status_code=500, detail="Erro ao registrar solicitação de adoção.")
+
+@app.post("/api/apadrinhamento")
+async def submeter_apadrinhamento(dados: ApadrinhamentoSchema):
+    pool = get_pool()
+    if not pool:
+        raise HTTPException(status_code=500, detail="Banco de dados não conectado")
+    query = """
+        INSERT INTO apadrinha (id_adotante, id_animal, tipo_de_contribuicao, valor_recorrente, frequencia, status, data_de_inicio)
+        VALUES ($1, $2, $3, $4, $5, 'Ativo', CURRENT_DATE)
+        ON CONFLICT (id_adotante, id_animal)
+        DO UPDATE SET tipo_de_contribuicao = EXCLUDED.tipo_de_contribuicao, valor_recorrente = EXCLUDED.valor_recorrente, frequencia = EXCLUDED.frequencia, status = 'Ativo', data_de_inicio = CURRENT_DATE;
+    """
+    async with pool.acquire() as conn:
+        try:
+            await conn.execute(query, dados.id_adotante, dados.id_animal, dados.tipo_de_contribuicao, dados.valor_recorrente, dados.frequencia)
+            return {"mensagem": "Vínculo de apadrinhamento registrado com sucesso!"}
+        except Exception as e:
+            print(f"Erro ao registrar apadrinhamento: {e}")
+            raise HTTPException(status_code=500, detail="Erro ao registrar apadrinhamento.")

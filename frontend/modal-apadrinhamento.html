@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdotaPet — Formulário de Apadrinhamento</title>
+    <link rel="stylesheet" href="static/modal-apadrinhamento.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="theme-adotante">
+
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-paw paw-logo"></i>
+                <span>Adota<strong>Pet</strong></span>
+            </a>
+            
+            <nav class="nav-menu">
+                <a href="dashboard-adotante.html" class="nav-link"><i class="fa-solid fa-arrow-left"></i> Catálogo</a>
+                <a href="gestao-apadrinhamentos.html" class="nav-link"><i class="fa-solid fa-hand-holding-dollar"></i> Meus Apadrinhamentos</a>
+            </nav>
+
+            <div class="user-menu">
+                <div class="user-info">
+                    <span class="user-name" id="navUserName">Adotante</span>
+                    <span class="user-role">Perfil Adotante / Padrinho</span>
+                </div>
+                <a href="login.html" class="btn-logout" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="sponsor-container">
+            <div class="pet-preview-header">
+                <img id="petImg" src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=300" alt="Pet" class="pet-preview-avatar">
+                <div>
+                    <span class="badge" style="background: rgba(255,255,255,0.2); color: white; margin-bottom: 6px;">Programa de Padrinhos</span>
+                    <h2 id="petNome" style="font-size: 1.6rem; font-weight: 800;">Apadrinhar Pet</h2>
+                    <p id="petDetails" style="font-size: 0.9rem; opacity: 0.9;">Carregando detalhes do pet...</p>
+                </div>
+            </div>
+
+            <div class="card" style="border-radius: 0 0 var(--radius-lg) var(--radius-lg); border-top: none; padding: 30px;">
+                <form id="formApadrinhamento" onsubmit="confirmarApadrinhamento(event)">
+                    
+                    <h3 style="font-size: 1.15rem; color: var(--dark-blue); margin-bottom: 14px;">
+                        1. Selecione o Tipo de Contribuição
+                    </h3>
+                    <div class="contribution-options-grid">
+                        <div class="contribution-card active" onclick="selecionarTipo('Ração', this)">
+                            <i class="fa-solid fa-bowl-food"></i>
+                            <h4>Ração</h4>
+                            <p>Custeio de nutrição e alimentação mensal de qualidade.</p>
+                        </div>
+                        <div class="contribution-card" onclick="selecionarTipo('Tratamento', this)">
+                            <i class="fa-solid fa-syringe"></i>
+                            <h4>Tratamento</h4>
+                            <p>Custeio de vacinas, exames e remédios clínicos.</p>
+                        </div>
+                        <div class="contribution-card" onclick="selecionarTipo('Financeira', this)">
+                            <i class="fa-solid fa-hand-holding-dollar"></i>
+                            <h4>Financeira Livre</h4>
+                            <p>Doação aberta para despesas gerais da instituição com o pet.</p>
+                        </div>
+                    </div>
+                    <input type="hidden" id="tipoContribuicao" value="Ração">
+
+                    <h3 style="font-size: 1.15rem; color: var(--dark-blue); margin-bottom: 12px; margin-top: 24px;">
+                        2. Defina o Valor Recorrente (R$)
+                    </h3>
+                    <div class="values-preset">
+                        <button type="button" class="preset-btn" onclick="setValor(30, this)">R$ 30,00</button>
+                        <button type="button" class="preset-btn active" onclick="setValor(50, this)">R$ 50,00</button>
+                        <button type="button" class="preset-btn" onclick="setValor(100, this)">R$ 100,00</button>
+                        <button type="button" class="preset-btn" onclick="setValor(150, this)">R$ 150,00</button>
+                    </div>
+                    <div class="form-group" style="max-width: 300px;">
+                        <label for="valorRecorrente">Ou digite outro valor (R$)</label>
+                        <input type="number" step="0.01" min="10" id="valorRecorrente" class="form-control" value="50.00" required>
+                    </div>
+
+                    <h3 style="font-size: 1.15rem; color: var(--dark-blue); margin-bottom: 12px; margin-top: 24px;">
+                        3. Frequência da Contribuição
+                    </h3>
+                    <div class="form-group" style="max-width: 300px;">
+                        <select id="frequenciaContribuicao" class="form-control" required onchange="atualizarResumo()">
+                            <option value="Mensal" selected>Mensal (Recomendado)</option>
+                            <option value="Trimestral">Trimestral</option>
+                            <option value="Semestral">Semestral</option>
+                            <option value="Anual">Anual</option>
+                            <option value="Única">Doação Pontual / Única</option>
+                        </select>
+                    </div>
+
+                    <div class="summary-recurrent-box">
+                        <h4 style="font-size: 1rem; color: var(--dark-blue); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-circle-check" style="color: var(--success-green);"></i> Resumo do Apadrinhamento
+                        </h4>
+                        <div style="font-size: 0.92rem; line-height: 1.6; color: var(--text-color);">
+                            <p><strong>Pet Apadrinhado:</strong> <span id="resumoPet">Carregando...</span></p>
+                            <p><strong>Destinação:</strong> <span id="resumoTipo">Ração</span></p>
+                            <p><strong>Compromisso:</strong> <span id="resumoValor">R$ 50,00</span> com periodicidade <span id="resumoFreq">Mensal</span></p>
+                            <p><strong>Data de Início:</strong> <span id="resumoDataInicio">Hoje</span></p>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 6px;">* O registro e controle de vínculo de apadrinhamento é gerido diretamente pela plataforma no banco de dados.</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
+                        <a href="dashboard-adotante.html" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" id="btnSubmitApadrinhamento" class="btn btn-orange" style="padding: 12px 28px; font-weight: 700;">
+                            <i class="fa-solid fa-heart"></i> Confirmar Vínculo de Apadrinhamento
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:8000/api';
+        let petAtual = null;
+
+        function getPetId() {
+            const params = new URLSearchParams(window.location.search);
+            return parseInt(params.get('id')) || 1;
+        }
+
+        function selecionarTipo(tipo, elemento) {
+            document.querySelectorAll('.contribution-card').forEach(el => el.classList.remove('active'));
+            elemento.classList.add('active');
+            document.getElementById('tipoContribuicao').value = tipo;
+            atualizarResumo();
+        }
+
+        function setValor(val, elemento) {
+            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+            if (elemento) elemento.classList.add('active');
+            document.getElementById('valorRecorrente').value = val.toFixed(2);
+            atualizarResumo();
+        }
+
+        function atualizarResumo() {
+            const tipo = document.getElementById('tipoContribuicao').value;
+            const valor = parseFloat(document.getElementById('valorRecorrente').value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            const freq = document.getElementById('frequenciaContribuicao').value;
+
+            if (petAtual) {
+                document.getElementById('resumoPet').textContent = petAtual.nome;
+            }
+            document.getElementById('resumoTipo').textContent = tipo;
+            document.getElementById('resumoValor').textContent = valor;
+            document.getElementById('resumoFreq').textContent = freq;
+        }
+
+        async function carregarPet() {
+            const petId = getPetId();
+            const session = JSON.parse(localStorage.getItem('adotapet_session'));
+            if (session && session.nome) {
+                document.getElementById('navUserName').textContent = session.nome;
+            }
+
+            document.getElementById('resumoDataInicio').textContent = new Date().toLocaleDateString('pt-BR');
+
+            try {
+                const res = await fetch(`${API_URL}/animais/${petId}`);
+                if (res.ok) {
+                    petAtual = await res.json();
+                    document.getElementById('petNome').textContent = `Apadrinhar ${petAtual.nome}`;
+                    if (petAtual.fotos && petAtual.fotos.length > 0) {
+                        document.getElementById('petImg').src = petAtual.fotos[0];
+                    }
+                    const ongNome = petAtual.instituicao ? petAtual.instituicao.razao_social : 'Instituição Parceira';
+                    document.getElementById('petDetails').textContent = `${petAtual.especie} • ${petAtual.raca || 'SRD'} • Sob cuidados de ${ongNome}`;
+                    atualizarResumo();
+                }
+            } catch (e) {
+                console.warn('Erro ao carregar detalhes do pet:', e);
+            }
+        }
+
+        async function confirmarApadrinhamento(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSubmitApadrinhamento');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Registrando...';
+
+            const session = JSON.parse(localStorage.getItem('adotapet_session'));
+            const idAdotante = session ? session.id_usuario : 6;
+            const petId = getPetId();
+
+            const payload = {
+                id_adotante: idAdotante,
+                id_animal: petId,
+                tipo_de_contribuicao: document.getElementById('tipoContribuicao').value,
+                valor_recorrente: parseFloat(document.getElementById('valorRecorrente').value),
+                frequencia: document.getElementById('frequenciaContribuicao').value
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/apadrinhamento`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    const petNome = petAtual ? petAtual.nome : 'o pet';
+                    alert(`🎉 Parabéns! Você agora é o padrinho oficial de ${petNome}!\n\nSeu apoio foi registrado no banco de dados com sucesso.`);
+                    window.location.href = 'gestao-apadrinhamentos.html';
+                } else {
+                    const err = await res.json();
+                    alert(`Erro ao registrar apadrinhamento: ${err.detail || 'Não foi possível concluir o registro.'}`);
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-heart"></i> Confirmar Vínculo de Apadrinhamento';
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Erro de conexão com o servidor.');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-heart"></i> Confirmar Vínculo de Apadrinhamento';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const valorInput = document.getElementById('valorRecorrente');
+            valorInput.addEventListener('input', atualizarResumo);
+            carregarPet();
+        });
+    </script>
+</body>
+</html>

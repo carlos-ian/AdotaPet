@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdotaPet — Perfil e Dados da Instituição</title>
+    <link rel="stylesheet" href="static/ong-portal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="theme-ong">
+
+    <!-- Navbar Superior -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-paw paw-logo"></i>
+                <span>Adota<strong>Pet</strong> <span style="font-size: 0.8rem; background: #FFF4EC; color: var(--primary-orange); padding: 2px 8px; border-radius: 6px; margin-left: 6px;">ONG Admin</span></span>
+            </a>
+            
+            <nav class="nav-menu">
+                <a href="dashboard-adotante.html" target="_blank" class="nav-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Catálogo Público</a>
+            </nav>
+
+            <div class="user-menu">
+                <div class="user-info">
+                    <span class="user-name" id="ongNavName">Instituto Eu Sou o Bicho</span>
+                    <span class="user-role">Instituição Verificada <i class="fa-solid fa-circle-check" style="color: #2563EB;"></i></span>
+                </div>
+                <a href="login.html" class="btn-logout" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-sidebar-title">Painel Operacional</div>
+            <a href="dashboard-instituicao.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-chart-pie"></i> Visão Geral
+            </a>
+            <a href="gestao-pets.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-paw"></i> Gerenciar Pets
+            </a>
+            <a href="acompanhamento-adocoes.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-clipboard-check"></i> Processos de Adoção
+            </a>
+            <a href="gestao-apadrinhamentos.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-hand-holding-dollar"></i> Apadrinhamentos
+            </a>
+            
+            <div class="admin-sidebar-title" style="margin-top: 16px;">Configurações</div>
+            <a href="prontuario-veterinario.html?id=1" class="sidebar-nav-item">
+                <i class="fa-solid fa-notes-medical"></i> Prontuário Clínico
+            </a>
+            <a href="perfil-instituicao.html" class="sidebar-nav-item active">
+                <i class="fa-solid fa-building-ngo"></i> Dados da Instituição
+            </a>
+        </aside>
+
+        <main class="admin-main">
+            <div class="admin-page-header">
+                <div>
+                    <h1>Perfil e Dados da Instituição</h1>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">Gerencie a Razão Social, CNPJ, canais de atendimento e confira o status do Selo de Verificação da plataforma.</p>
+                </div>
+            </div>
+
+            <!-- Card de Selo de Verificação da Plataforma -->
+            <div class="card" style="margin-bottom: 24px; border-left: 6px solid #2563EB; background: #EFF6FF;">
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: gap; gap: 16px;">
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div style="width: 50px; height: 50px; border-radius: 50%; background: #2563EB; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                            <i class="fa-solid fa-shield-check"></i>
+                        </div>
+                        <div>
+                            <h3 style="color: #1E3A8A; font-size: 1.15rem; font-weight: 700;">Status do Selo de Verificação (Selo_de_Verificacao)</h3>
+                            <p style="color: #3B82F6; font-size: 0.9rem;">Esta organização possui verificação documental ativa concedida pela equipe técnica do AdotaPet.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="badge" style="background: #2563EB; color: white; font-size: 0.88rem; padding: 6px 14px;">
+                            <i class="fa-solid fa-circle-check"></i> Selo Ativo (True)
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulário de Gestão da Instituição -->
+            <div class="card">
+                <form id="formPerfilOng" onsubmit="salvarPerfilOng(event)">
+                    <div class="card-header">
+                        <h3 style="font-size: 1.15rem; color: var(--dark-blue);">
+                            <i class="fa-solid fa-building" style="color: var(--primary-orange);"></i> Informações Corporativas e Jurídicas (Tabela Instituicao)
+                        </h3>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label for="razaoSocial"><i class="fa-solid fa-briefcase"></i> Razão Social da Instituição</label>
+                            <input type="text" id="razaoSocial" class="form-control" value="Instituto Eu Sou o Bicho de Proteção Animal" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cnpj"><i class="fa-solid fa-fingerprint"></i> CNPJ (Único)</label>
+                            <input type="text" id="cnpj" class="form-control" value="12.345.678/0001-90" required>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label for="emailOng"><i class="fa-solid fa-envelope"></i> E-mail Institucional (Tabela Usuario)</label>
+                            <input type="email" id="emailOng" class="form-control" value="contato@eusouobicho.org.br" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="telefoneOng"><i class="fa-solid fa-phone"></i> Telefone / WhatsApp (Tabela Usuario_Telefone)</label>
+                            <input type="text" id="telefoneOng" class="form-control" value="(62) 3201-9999" required>
+                        </div>
+                    </div>
+
+                    <div class="card-header" style="margin-top: 20px;">
+                        <h3 style="font-size: 1.15rem; color: var(--dark-blue);">
+                            <i class="fa-solid fa-map-location-dot" style="color: var(--primary-blue);"></i> Endereço Comercial da Sede (Tabela Usuario)
+                        </h3>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label for="ruaOng">Logradouro / Rua</label>
+                            <input type="text" id="ruaOng" class="form-control" value="Avenida T-63" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="numeroOng">Número</label>
+                            <input type="text" id="numeroOng" class="form-control" value="1420" required>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px;">
+                        <div class="form-group">
+                            <label for="bairroOng">Bairro</label>
+                            <input type="text" id="bairroOng" class="form-control" value="Setor Bueno" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cidadeOng">Cidade</label>
+                            <input type="text" id="cidadeOng" class="form-control" value="Goiânia" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="estadoOng">Estado (UF)</label>
+                            <input type="text" id="estadoOng" class="form-control" value="GO" maxlength="2" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cepOng">CEP</label>
+                            <input type="text" id="cepOng" class="form-control" value="74230-100" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="complementoOng">Complemento</label>
+                        <input type="text" id="complementoOng" class="form-control" value="Galpão de Acolhimento 02">
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+                        <button type="submit" class="btn btn-orange" style="padding: 12px 28px;">
+                            <i class="fa-solid fa-floppy-disk"></i> Salvar Alterações Cadastrais
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function carregarPerfil() {
+            const perfilSalvo = JSON.parse(localStorage.getItem('adotapet_perfil_ong'));
+            if (perfilSalvo) {
+                document.getElementById('razaoSocial').value = perfilSalvo.razao_social || '';
+                document.getElementById('cnpj').value = perfilSalvo.cnpj || '';
+                document.getElementById('emailOng').value = perfilSalvo.email || '';
+                document.getElementById('telefoneOng').value = perfilSalvo.telefone || '';
+                document.getElementById('ruaOng').value = perfilSalvo.rua || '';
+                document.getElementById('numeroOng').value = perfilSalvo.numero || '';
+                document.getElementById('bairroOng').value = perfilSalvo.bairro || '';
+                document.getElementById('cidadeOng').value = perfilSalvo.cidade || '';
+                document.getElementById('estadoOng').value = perfilSalvo.estado || '';
+                document.getElementById('cepOng').value = perfilSalvo.cep || '';
+                document.getElementById('complementoOng').value = perfilSalvo.complemento || '';
+                document.getElementById('ongNavName').textContent = perfilSalvo.razao_social || 'ONG';
+            }
+        }
+
+        function salvarPerfilOng(e) {
+            e.preventDefault();
+            const dados = {
+                razao_social: document.getElementById('razaoSocial').value,
+                cnpj: document.getElementById('cnpj').value,
+                email: document.getElementById('emailOng').value,
+                telefone: document.getElementById('telefoneOng').value,
+                rua: document.getElementById('ruaOng').value,
+                numero: document.getElementById('numeroOng').value,
+                bairro: document.getElementById('bairroOng').value,
+                cidade: document.getElementById('cidadeOng').value,
+                estado: document.getElementById('estadoOng').value,
+                cep: document.getElementById('cepOng').value,
+                complemento: document.getElementById('complementoOng').value,
+                selo_verificacao: true
+            };
+
+            localStorage.setItem('adotapet_perfil_ong', JSON.stringify(dados));
+            document.getElementById('ongNavName').textContent = dados.razao_social;
+            alert('✅ Dados da Instituição atualizados com sucesso!');
+        }
+
+        document.addEventListener('DOMContentLoaded', carregarPerfil);
+    </script>
+</body>
+</html>

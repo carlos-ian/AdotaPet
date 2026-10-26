@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdotaPet — Perfil do Usuário</title>
+    <link rel="stylesheet" href="static/perfil-adotante.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="theme-adotante">
+
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-paw paw-logo"></i>
+                <span>Adota<strong>Pet</strong></span>
+            </a>
+            
+            <nav class="nav-menu">
+                <a href="dashboard-adotante.html" class="nav-link"><i class="fa-solid fa-store"></i> Encontrar Pets</a>
+                <a href="acompanhamento-adocoes.html" class="nav-link"><i class="fa-solid fa-heart"></i> Minhas Adoções</a>
+                <a href="gestao-apadrinhamentos.html" class="nav-link"><i class="fa-solid fa-hand-holding-dollar"></i> Meus Apadrinhamentos</a>
+                <a href="perfil-adotante.html" class="nav-link active"><i class="fa-solid fa-user"></i> Meu Perfil</a>
+            </nav>
+
+            <div class="user-menu">
+                <div class="user-info">
+                    <span class="user-name" id="navUserName">Adotante</span>
+                    <span class="user-role">Perfil Adotante</span>
+                </div>
+                <a href="login.html" class="btn-logout" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="adotante-dashboard-header">
+            <div>
+                <h1 style="font-size: 1.8rem; color: var(--dark-blue); font-weight: 800;">Meu Perfil de Usuário</h1>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Visualize e confira seus dados cadastrais, endereço e histórico com animais.</p>
+            </div>
+            <div>
+                <a href="dashboard-adotante.html" class="btn btn-orange">
+                    <i class="fa-solid fa-magnifying-glass"></i> Explorar Pets
+                </a>
+            </div>
+        </div>
+
+        <div class="profile-summary-box">
+            <div class="profile-avatar-large">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="profile-info-grid">
+                <div class="profile-info-item">
+                    <span>Nome Completo</span>
+                    <p id="dispNome">Carregando...</p>
+                </div>
+                <div class="profile-info-item">
+                    <span>CPF (Adotante)</span>
+                    <p id="dispCpf">Carregando...</p>
+                </div>
+                <div class="profile-info-item">
+                    <span>E-mail</span>
+                    <p id="dispEmail">Carregando...</p>
+                </div>
+                <div class="profile-info-item">
+                    <span>Telefone(s)</span>
+                    <p id="dispTelefone">Carregando...</p>
+                </div>
+                <div class="profile-info-item">
+                    <span>Tipo de Residência</span>
+                    <p id="dispResidencia">Carregando...</p>
+                </div>
+                <div class="profile-info-item">
+                    <span>CEP</span>
+                    <p id="dispCep">Carregando...</p>
+                </div>
+                <div class="profile-info-item">
+                    <span>Endereço Completo</span>
+                    <p id="dispEndereco">Carregando...</p>
+                </div>
+                <div class="profile-info-item">
+                    <span>Cidade / UF</span>
+                    <p id="dispCidade">Carregando...</p>
+                </div>
+                <div class="profile-info-item" style="grid-column: span 2;">
+                    <span>Histórico com Pets</span>
+                    <p id="dispHistorico">Carregando...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:8000/api';
+
+        async function carregarPerfil() {
+            const session = JSON.parse(localStorage.getItem('adotapet_session'));
+            const idUsuario = session ? session.id_usuario : 6;
+
+            try {
+                const res = await fetch(`${API_URL}/adotante/${idUsuario}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('dispNome').textContent = data.nome || 'Não informado';
+                    document.getElementById('dispCpf').textContent = data.cpf || 'Não informado';
+                    document.getElementById('dispEmail').textContent = data.email || 'Não informado';
+                    document.getElementById('dispTelefone').textContent = (data.telefones && data.telefones.length > 0) ? data.telefones.join(' / ') : 'Não informado';
+                    document.getElementById('dispResidencia').textContent = data.tipo_residencia || 'Não informado';
+                    document.getElementById('dispCep').textContent = data.cep || 'Não informado';
+                    
+                    const ruaCompl = [data.rua, data.numero, data.complemento, data.bairro].filter(Boolean).join(', ');
+                    document.getElementById('dispEndereco').textContent = ruaCompl || 'Não informado';
+                    
+                    const cidUf = [data.cidade, data.estado].filter(Boolean).join(' - ');
+                    document.getElementById('dispCidade').textContent = cidUf || 'Não informado';
+                    
+                    document.getElementById('dispHistorico').textContent = data.historico_pets || 'Nenhum histórico informado.';
+
+                    document.getElementById('navUserName').textContent = data.nome || data.email.split('@')[0];
+                    return;
+                }
+            } catch (e) {
+                console.warn('Erro ao carregar dados da API:', e);
+            }
+
+            if (session) {
+                document.getElementById('dispNome').textContent = session.nome || 'Usuário Adotante';
+                document.getElementById('dispEmail').textContent = session.email || 'usuario@email.com';
+                document.getElementById('dispCpf').textContent = '123.456.789-00';
+                document.getElementById('dispTelefone').textContent = '(62) 98888-7777';
+                document.getElementById('dispResidencia').textContent = 'Casa com quintal';
+                document.getElementById('dispCep').textContent = '74000-000';
+                document.getElementById('dispEndereco').textContent = 'Avenida Central, 100, Setor Bueno';
+                document.getElementById('dispCidade').textContent = 'Goiânia - GO';
+                document.getElementById('dispHistorico').textContent = 'Tutor experiente com pets resgatados há mais de 5 anos.';
+                document.getElementById('navUserName').textContent = session.nome || session.email.split('@')[0];
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', carregarPerfil);
+    </script>
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdotaPet — Gestão de Prontuário Veterinário</title>
+    <link rel="stylesheet" href="static/ong-portal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="theme-ong">
+
+    <!-- Navbar Superior -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-paw paw-logo"></i>
+                <span>Adota<strong>Pet</strong> <span style="font-size: 0.8rem; background: #FFF4EC; color: var(--primary-orange); padding: 2px 8px; border-radius: 6px; margin-left: 6px;">ONG Admin</span></span>
+            </a>
+            
+            <nav class="nav-menu">
+                <a href="dashboard-adotante.html" target="_blank" class="nav-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Catálogo Público</a>
+            </nav>
+
+            <div class="user-menu">
+                <div class="user-info">
+                    <span class="user-name">Instituto Eu Sou o Bicho</span>
+                    <span class="user-role">Instituição Verificada <i class="fa-solid fa-circle-check" style="color: #2563EB;"></i></span>
+                </div>
+                <a href="login.html" class="btn-logout" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-sidebar-title">Painel Operacional</div>
+            <a href="dashboard-instituicao.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-chart-pie"></i> Visão Geral
+            </a>
+            <a href="gestao-pets.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-paw"></i> Gerenciar Pets
+            </a>
+            <a href="acompanhamento-adocoes.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-clipboard-check"></i> Processos de Adoção
+            </a>
+            <a href="gestao-apadrinhamentos.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-hand-holding-dollar"></i> Apadrinhamentos
+            </a>
+            
+            <div class="admin-sidebar-title" style="margin-top: 16px;">Configurações</div>
+            <a href="prontuario-veterinario.html?id=1" class="sidebar-nav-item active">
+                <i class="fa-solid fa-notes-medical"></i> Prontuário Clínico
+            </a>
+            <a href="perfil-instituicao.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-building-ngo"></i> Dados da Instituição
+            </a>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Breadcrumb / Voltar -->
+            <div style="margin-bottom: 16px;">
+                <a href="gestao-pets.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600;">
+                    <i class="fa-solid fa-arrow-left"></i> Voltar à Lista de Animais
+                </a>
+            </div>
+
+            <!-- Cabeçalho do Pet Selecionado -->
+            <div class="card" style="margin-bottom: 24px; padding: 20px 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <img id="prontuarioPetImg" src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=300" style="width: 70px; height: 70px; border-radius: 12px; object-fit: cover;">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <h2 id="prontuarioPetNome" style="font-size: 1.5rem; font-weight: 800; color: var(--dark-blue);">Thor</h2>
+                                <span id="prontuarioPetStatus" class="badge badge-disponivel">Disponível</span>
+                            </div>
+                            <p id="prontuarioPetInfo" style="color: var(--text-muted); font-size: 0.9rem; margin-top: 2px;">
+                                Cão • Vira-lata • 2 anos • Porte Médio • Sexo Macho
+                            </p>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="selectPetAtivo" style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Alternar Animal:</label>
+                        <select id="selectPetAtivo" class="form-control" onchange="trocarPetProntuario(this.value)">
+                            <option value="1" selected>Thor (Cão)</option>
+                            <option value="2">Luna (Gato)</option>
+                            <option value="3">Bob (Cão)</option>
+                            <option value="4">Mel (Cão)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1.6fr; gap: 24px;">
+                <!-- Formulário de Novo Evento Clínico -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 style="font-size: 1.1rem; color: var(--dark-blue);">
+                            <i class="fa-solid fa-plus-circle" style="color: var(--primary-orange);"></i> Inserir Evento Médico (Tabela Prontuario_Veterinario)
+                        </h3>
+                    </div>
+                    <form id="formProcedimento" onsubmit="adicionarProcedimento(event)">
+                        <div class="form-group">
+                            <label for="tipoProcedimento"><i class="fa-solid fa-stethoscope"></i> Tipo de Procedimento (Tipo_de_Procedimento)</label>
+                            <select id="tipoProcedimento" class="form-control" required>
+                                <option value="Vacinação" selected>Vacinação (V10, Antirrábica, Quádrupla)</option>
+                                <option value="Castração">Castração (Cirurgia)</option>
+                                <option value="Vermifugação">Vermifugação / Antipulgas</option>
+                                <option value="Consulta">Consulta Geral de Rotina</option>
+                                <option value="Exame Laboratorial">Exame Laboratorial / Raio-X</option>
+                                <option value="Cirurgia Emergencial">Cirurgia Emergencial / Tratamento</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dataProcedimento"><i class="fa-solid fa-calendar-day"></i> Data do Procedimento (Data_do_Procedimento)</label>
+                            <input type="date" id="dataProcedimento" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="descricaoProcedimento"><i class="fa-solid fa-file-lines"></i> Detalhamento / Prescrição Clínica (Descricao)</label>
+                            <textarea id="descricaoProcedimento" class="form-control" rows="4" placeholder="Ex: Aplicação de reforço anual de vacina V10. Animal em ótimo estado clínico, sem reações adversas..." required></textarea>
+                        </div>
+
+                        <div style="margin-top: 20px;">
+                            <button type="submit" class="btn btn-orange" style="width: 100%;">
+                                <i class="fa-solid fa-floppy-disk"></i> Registrar no Prontuário
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Histórico Clínico do Pet Selecionado -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 style="font-size: 1.1rem; color: var(--dark-blue);">
+                            <i class="fa-solid fa-clock-rotate-left" style="color: var(--primary-blue);"></i> Linha do Tempo e Procedimentos Registrados
+                        </h3>
+                        <span class="badge badge-info" id="countEventos">3 registros</span>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Tipo de Procedimento</th>
+                                    <th>Descrição / Prescrição</th>
+                                    <th>Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaProntuariosBody">
+                                <!-- Gerado via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Script de Gestão do Prontuário Clínico -->
+    <script>
+        const prontuariosBanco = {
+            "1": [
+                { id: 101, data: "2026-09-15", tipo: "Vacinação", descricao: "Primeira dose da Vacina V10 realizada. Animal reagiu tranquilamente." },
+                { id: 102, data: "2026-07-20", tipo: "Castração", descricao: "Orquiectomia bilateral eletiva realizada sob anestesia geral. Recuperação pós-cirúrgica excelente." },
+                { id: 103, data: "2026-06-10", tipo: "Vermifugação", descricao: "Administrado Drontal Plus para controle parasitário prévio ao acolhimento." }
+            ],
+            "2": [
+                { id: 201, data: "2026-10-10", tipo: "Castração", descricao: "Ovariosalpingohisterectomia concluída sem intercorrências." },
+                { id: 202, data: "2026-08-05", tipo: "Vacinação", descricao: "Vacina Quádrupla Felina aplicada." }
+            ],
+            "3": [
+                { id: 301, data: "2026-10-01", tipo: "Consulta", descricao: "Avaliação ortopédica para fisioterapia pós-resgate." }
+            ],
+            "4": [
+                { id: 401, data: "2026-05-12", tipo: "Vacinação", descricao: "V8 Canina e antirrábica administradas." }
+            ]
+        };
+
+        const dadosAnimais = {
+            "1": { nome: "Thor", especie: "Cão", raca: "Vira-lata", idade: 2, porte: "Médio", sexo: "Macho", status: "Disponível", foto: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=300" },
+            "2": { nome: "Luna", especie: "Gato", raca: "Siamês", idade: 1, porte: "Pequeno", sexo: "Fêmea", status: "Disponível", foto: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=300" },
+            "3": { nome: "Bob", especie: "Cão", raca: "Golden Retriever", idade: 3, porte: "Grande", sexo: "Macho", status: "Em tratamento", foto: "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=300" },
+            "4": { nome: "Mel", especie: "Cão", raca: "Poodle", idade: 4, porte: "Pequeno", sexo: "Fêmea", status: "Adotado", foto: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=300" }
+        };
+
+        function getPetId() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id') || '1';
+        }
+
+        function trocarPetProntuario(novoId) {
+            window.location.href = `prontuario-veterinario.html?id=${novoId}`;
+        }
+
+        function carregarProntuario() {
+            const id = getPetId();
+            const pet = dadosAnimais[id] || dadosAnimais["1"];
+
+            document.getElementById('selectPetAtivo').value = id;
+            document.getElementById('prontuarioPetNome').textContent = pet.nome;
+            document.getElementById('prontuarioPetImg').src = pet.foto;
+            document.getElementById('prontuarioPetStatus').textContent = pet.status;
+            document.getElementById('prontuarioPetInfo').textContent = `${pet.especie} • ${pet.raca} • ${pet.idade} anos • Porte ${pet.porte} • ${pet.sexo}`;
+
+            // Carrega lista
+            let listaGeral = JSON.parse(localStorage.getItem('adotapet_prontuarios')) || prontuariosBanco;
+            let eventos = listaGeral[id] || [];
+
+            document.getElementById('countEventos').textContent = `${eventos.length} registros`;
+
+            const tbody = document.getElementById('tabelaProntuariosBody');
+            tbody.innerHTML = '';
+
+            if (eventos.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 30px;">Nenhum evento veterinário registrado para este pet.</td></tr>`;
+                return;
+            }
+
+            eventos.forEach((ev, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${formatarData(ev.data)}</strong></td>
+                    <td><span class="badge badge-info">${ev.tipo}</span></td>
+                    <td style="font-size: 0.88rem; color: #334155;">${ev.descricao}</td>
+                    <td>
+                        <button onclick="removerProcedimento(${index})" class="btn btn-secondary btn-sm" title="Excluir Registro">
+                            <i class="fa-solid fa-trash" style="color: var(--danger-red);"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function formatarData(dataStr) {
+            if (!dataStr) return '—';
+            const partes = dataStr.split('-');
+            if (partes.length === 3) return `${partes[2]}/${partes[1]}/${partes[0]}`;
+            return dataStr;
+        }
+
+        function adicionarProcedimento(e) {
+            e.preventDefault();
+            const petId = getPetId();
+            let listaGeral = JSON.parse(localStorage.getItem('adotapet_prontuarios')) || prontuariosBanco;
+            if (!listaGeral[petId]) listaGeral[petId] = [];
+
+            const novoEvento = {
+                id: Date.now(),
+                data: document.getElementById('dataProcedimento').value,
+                tipo: document.getElementById('tipoProcedimento').value,
+                descricao: document.getElementById('descricaoProcedimento').value
+            };
+
+            listaGeral[petId].unshift(novoEvento);
+            localStorage.setItem('adotapet_prontuarios', JSON.stringify(listaGeral));
+
+            document.getElementById('descricaoProcedimento').value = '';
+            carregarProntuario();
+            alert('✅ Procedimento veterinário adicionado com sucesso ao prontuário!');
+        }
+
+        function removerProcedimento(index) {
+            if (!confirm('Deseja realmente remover este registro de prontuário clínico?')) return;
+            const petId = getPetId();
+            let listaGeral = JSON.parse(localStorage.getItem('adotapet_prontuarios')) || prontuariosBanco;
+            if (listaGeral[petId]) {
+                listaGeral[petId].splice(index, 1);
+                localStorage.setItem('adotapet_prontuarios', JSON.stringify(listaGeral));
+                carregarProntuario();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('dataProcedimento').value = new Date().toISOString().split('T')[0];
+            carregarProntuario();
+        });
+    </script>
+</body>
+</html>

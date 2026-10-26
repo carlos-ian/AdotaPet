@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdotaPet — Formulário de Solicitação de Adoção</title>
+    <link rel="stylesheet" href="static/formulario-adocao.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="theme-adotante">
+
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-paw paw-logo"></i>
+                <span>Adota<strong>Pet</strong></span>
+            </a>
+            
+            <nav class="nav-menu">
+                <a href="dashboard-adotante.html" class="nav-link"><i class="fa-solid fa-arrow-left"></i> Voltar ao Catálogo</a>
+                <a href="acompanhamento-adocoes.html" class="nav-link"><i class="fa-solid fa-heart"></i> Minhas Adoções</a>
+            </nav>
+
+            <div class="user-menu">
+                <div class="user-info">
+                    <span class="user-name" id="navUserName">Adotante</span>
+                    <span class="user-role">Perfil Adotante</span>
+                </div>
+                <a href="login.html" class="btn-logout" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div style="margin-bottom: 20px;">
+            <a href="dashboard-adotante.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600;">
+                <i class="fa-solid fa-arrow-left"></i> Voltar para os Detalhes do Pet
+            </a>
+            <h1 style="font-size: 1.8rem; color: var(--dark-blue); font-weight: 800; margin-top: 8px;">
+                Formalização de Intenção de Adoção
+            </h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">
+                Revise seus dados cadastrais, informe sua disponibilidade e confirme seu interesse para envio direto à instituição responsável.
+            </p>
+        </div>
+
+        <div class="form-layout">
+            <div>
+                <form id="formAdocao" onsubmit="submeterSolicitacao(event)">
+                    <div class="form-section-card">
+                        <div class="section-legend">
+                            <i class="fa-solid fa-id-card" style="color: var(--primary-orange);"></i>
+                            1. Conferência dos Dados do Adotante
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="adotanteNome"><i class="fa-solid fa-user"></i> Nome Completo</label>
+                                <input type="text" id="adotanteNome" class="form-control readonly-field" readonly value="Carregando...">
+                            </div>
+                            <div class="form-group">
+                                <label for="adotanteCpf"><i class="fa-solid fa-fingerprint"></i> CPF</label>
+                                <input type="text" id="adotanteCpf" class="form-control readonly-field" readonly value="Carregando...">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="adotanteEmail"><i class="fa-solid fa-envelope"></i> E-mail de Contato</label>
+                                <input type="email" id="adotanteEmail" class="form-control readonly-field" readonly value="Carregando...">
+                            </div>
+                            <div class="form-group">
+                                <label for="adotanteTelefone"><i class="fa-solid fa-phone"></i> Telefone / WhatsApp</label>
+                                <input type="text" id="adotanteTelefone" class="form-control" value="Carregando...">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="adotanteTipoResidencia"><i class="fa-solid fa-house"></i> Tipo de Residência</label>
+                                <input type="text" id="adotanteTipoResidencia" class="form-control readonly-field" readonly value="Casa">
+                            </div>
+                            <div class="form-group">
+                                <label for="adotanteEndereco"><i class="fa-solid fa-location-dot"></i> Cidade / Endereço</label>
+                                <input type="text" id="adotanteEndereco" class="form-control readonly-field" readonly value="Carregando...">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section-card">
+                        <div class="section-legend">
+                            <i class="fa-solid fa-clipboard-question" style="color: var(--primary-orange);"></i>
+                            2. Histórico com Pets e Motivação
+                        </div>
+
+                        <div class="form-group">
+                            <label for="adotanteHistorico"><i class="fa-solid fa-clock-rotate-left"></i> Histórico de Pets Anteriores</label>
+                            <textarea id="adotanteHistorico" class="form-control" rows="3" placeholder="Descreva brevemente sua experiência prévia com animais de estimação..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="observacoesAdotante"><i class="fa-solid fa-comment-dots"></i> Observações do Processo e Disponibilidade para Entrevista/Visita</label>
+                            <textarea id="observacoesAdotante" class="form-control" rows="3" placeholder="Informe sua disponibilidade para contato, entrevistas ou visitas..." required></textarea>
+                        </div>
+
+                        <div class="term-box">
+                            <label style="display: flex; gap: 10px; align-items: flex-start; cursor: pointer;">
+                                <input type="checkbox" id="aceiteTermo" required style="margin-top: 4px;">
+                                <span>Declaro que as informações acima são verídicas e concordo em cumprir os requisitos de guarda responsável da instituição, autorizando o contato para entrevistas e agendamento de visita.</span>
+                            </label>
+                        </div>
+
+                        <div style="margin-top: 24px; display: flex; gap: 12px; justify-content: flex-end;">
+                            <a href="dashboard-adotante.html" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" id="btnSubmitAdocao" class="btn btn-orange" style="padding: 12px 28px; font-weight: 700;">
+                                <i class="fa-solid fa-paper-plane"></i> Submeter Solicitação à Instituição
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="pet-summary-sidebar">
+                <img id="sidebarPetImg" src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=600" alt="Pet Escolhido" class="pet-sidebar-img">
+                <div class="pet-sidebar-content">
+                    <div class="pet-sidebar-header">
+                        <h2 id="sidebarPetNome" style="font-size: 1.4rem; color: var(--dark-blue); font-weight: 800;">Carregando...</h2>
+                        <span id="sidebarPetStatus" class="badge badge-disponivel">Disponível</span>
+                    </div>
+                    <p id="sidebarPetInfo" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px;">
+                        Carregando informações...
+                    </p>
+
+                    <div style="font-size: 0.85rem; color: #475569; border-top: 1px solid var(--border-color); padding-top: 10px;">
+                        <p id="sidebarPetObs"><strong><i class="fa-solid fa-notes-medical" style="color: var(--primary-blue);"></i> Observação:</strong> -</p>
+                    </div>
+
+                    <div class="ong-info-box">
+                        <p style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">Instituição Responsável</p>
+                        <h4 id="sidebarOngNome" style="color: var(--dark-blue); font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-building-ngo" style="color: var(--primary-orange);"></i> Carregando...
+                        </h4>
+                        <p id="sidebarOngCnpj" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">CNPJ: -</p>
+                        <p id="sidebarOngTel" style="font-size: 0.8rem; color: var(--text-muted);"><i class="fa-solid fa-phone"></i> -</p>
+                    </div>
+
+                    <div style="margin-top: 14px; text-align: center;">
+                        <a href="modal-apadrinhamento.html" id="linkApadrinharAlternativo" style="font-size: 0.85rem; color: var(--primary-blue); text-decoration: none; font-weight: 600;">
+                            Prefere apenas apadrinhar? Clique aqui.
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:8000/api';
+
+        function getPetId() {
+            const params = new URLSearchParams(window.location.search);
+            return parseInt(params.get('id')) || 1;
+        }
+
+        async function carregarDados() {
+            const petId = getPetId();
+            document.getElementById('linkApadrinharAlternativo').href = `modal-apadrinhamento.html?id=${petId}`;
+
+            const session = JSON.parse(localStorage.getItem('adotapet_session'));
+            const idUsuario = session ? session.id_usuario : 7;
+
+            if (session && session.nome) {
+                document.getElementById('navUserName').textContent = session.nome;
+            }
+
+            try {
+                const resUser = await fetch(`${API_URL}/adotante/${idUsuario}`);
+                if (resUser.ok) {
+                    const user = await resUser.json();
+                    document.getElementById('adotanteNome').value = user.nome || '';
+                    document.getElementById('adotanteCpf').value = user.cpf || '';
+                    document.getElementById('adotanteEmail').value = user.email || '';
+                    document.getElementById('adotanteTelefone').value = user.telefones && user.telefones.length > 0 ? user.telefones.join(', ') : '';
+                    document.getElementById('adotanteTipoResidencia').value = user.tipo_residencia || 'Casa';
+                    document.getElementById('adotanteEndereco').value = `${user.cidade || ''} - ${user.estado || ''}`;
+                    if (user.historico_pets && user.historico_pets !== 'Nenhum histórico registrado.') {
+                        document.getElementById('adotanteHistorico').value = user.historico_pets;
+                    }
+                }
+            } catch (err) {
+                console.warn('Erro ao carregar dados do usuário:', err);
+            }
+
+            try {
+                const resPet = await fetch(`${API_URL}/animais/${petId}`);
+                if (resPet.ok) {
+                    const pet = await resPet.json();
+                    document.getElementById('sidebarPetNome').textContent = pet.nome;
+                    if (pet.fotos && pet.fotos.length > 0) {
+                        document.getElementById('sidebarPetImg').src = pet.fotos[0];
+                    }
+                    document.getElementById('sidebarPetInfo').textContent = `${pet.especie} • ${pet.raca || 'SRD'} • ${pet.idade} • Porte ${pet.porte || 'Médio'}`;
+                    document.getElementById('sidebarPetStatus').textContent = pet.status;
+                    document.getElementById('sidebarPetObs').innerHTML = `<strong><i class="fa-solid fa-notes-medical" style="color: var(--primary-blue);"></i> Observação:</strong> ${pet.observacao || 'Nenhuma restrição registrada.'}`;
+                    
+                    if (pet.instituicao) {
+                        document.getElementById('sidebarOngNome').innerHTML = `<i class="fa-solid fa-building-ngo" style="color: var(--primary-orange);"></i> ${pet.instituicao.razao_social}`;
+                        document.getElementById('sidebarOngCnpj').textContent = `CNPJ: ${pet.instituicao.cnpj}`;
+                        document.getElementById('sidebarOngTel').innerHTML = `<i class="fa-solid fa-phone"></i> ${pet.instituicao.telefone}`;
+                    }
+                }
+            } catch (err) {
+                console.warn('Erro ao carregar dados do pet:', err);
+            }
+        }
+
+        async function submeterSolicitacao(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSubmitAdocao');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+
+            const session = JSON.parse(localStorage.getItem('adotapet_session'));
+            const idAdotante = session ? session.id_usuario : 7;
+            const petId = getPetId();
+            const observacao = document.getElementById('observacoesAdotante').value;
+
+            try {
+                const res = await fetch(`${API_URL}/adocao`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id_adotante: idAdotante,
+                        id_animal: petId,
+                        observacao: observacao
+                    })
+                });
+
+                if (res.ok) {
+                    alert('✅ Solicitação de Adoção submetida e registrada no banco de dados com sucesso!\n\nA instituição foi notificada e avaliará seu pedido.');
+                    window.location.href = 'acompanhamento-adocoes.html';
+                } else {
+                    const erro = await res.json();
+                    alert(`Erro ao submeter: ${erro.detail || 'Não foi possível registrar a solicitação.'}`);
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submeter Solicitação à Instituição';
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Erro de conexão ao enviar solicitação para o servidor.');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submeter Solicitação à Instituição';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', carregarDados);
+    </script>
+</body>
+</html>

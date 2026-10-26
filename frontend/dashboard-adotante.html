@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdotaPet - Painel do Adotante</title>
+    <link rel="stylesheet" href="static/dashboard-adotante.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="theme-adotante">
+
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="logo">
+                <i class="fa-solid fa-paw paw-logo"></i>
+                <span>Adota<strong>Pet</strong></span>
+            </a>
+            
+            <nav class="nav-menu">
+                <a href="dashboard-adotante.html" class="nav-link active"><i class="fa-solid fa-store"></i> Encontrar Pets</a>
+                <a href="acompanhamento-adocoes.html" class="nav-link"><i class="fa-solid fa-heart"></i> Minhas Adoções</a>
+                <a href="gestao-apadrinhamentos.html" class="nav-link"><i class="fa-solid fa-hand-holding-dollar"></i> Meus Apadrinhamento</a>
+                <a href="perfil-adotante.html" class="nav-link"><i class="fa-solid fa-user"></i> Meu Perfil</a>
+            </nav>
+
+            <div class="user-menu">
+                <div class="user-info">
+                    <span class="user-name" id="navUserName">Adotante</span>
+                    <span class="user-role">Perfil Adotante</span>
+                </div>
+                <a href="login.html" class="btn-logout" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="banner-section">
+            <div class="banner-text">
+                <h2>Encontre seu novo melhor amigo 🐾</h2>
+                <p>Navegue pelos animais resgatados por ONGs e parceiros cadastrados no AdotaPet e solicite uma adoção responsável ou apadrinhamento.</p>
+            </div>
+        </section>
+
+        <!-- Bloco de Estatísticas Gerais sobre Adoção no Brasil -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon orange"><i class="fa-solid fa-paw"></i></div>
+                <div class="stat-info">
+                    <h3 id="statSobTutela">+185 mil</h3>
+                    <p>Animais sob tutela de ONGs e protetores no Brasil</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon blue"><i class="fa-solid fa-heart-circle-check"></i></div>
+                <div class="stat-info">
+                    <h3 id="statTaxaSucesso">94%</h3>
+                    <p>Taxa de adoções bem-sucedidas no país com triagem e acompanhamento</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green"><i class="fa-solid fa-file-medical"></i></div>
+                <div class="stat-info">
+                    <h3 id="statAuditados">100%</h3>
+                    <p>Prontuários clínicos e históricos de saúde auditados no sistema</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quadro de Notícias Causa Animal no Brasil -->
+        <section class="news-section">
+            <div class="news-header">
+                <h3><i class="fa-solid fa-newspaper"></i> Notícias & Acontecimentos no Brasil</h3>
+                <span class="news-badge">Atualizado</span>
+            </div>
+            <div class="news-grid">
+                <article class="news-card">
+                    <span class="news-date">Adoção Responsável</span>
+                    <h4>Campanhas de microchipagem gratuita crescem nas capitais brasileiras</h4>
+                    <p>Iniciativas municipais visam aumentar a rastreabilidade e combater o abandono de pets em áreas urbanas.</p>
+                </article>
+                <article class="news-card">
+                    <span class="news-date">Legislação</span>
+                    <h4>Aumento na fiscalização contra maus-tratos a animais de pequeno porte</h4>
+                    <p>Delegacias especializadas intensificam resgates em parceria com ONGs e abrigos credenciados.</p>
+                </article>
+                <article class="news-card">
+                    <span class="news-date">Eventos</span>
+                    <h4>Feiras de adoção integrada movimentam ONGs neste final de semana</h4>
+                    <p>Mais de 50 instituições participam de mutirões presenciais e virtuais para encontrar novos lares.</p>
+                </article>
+            </div>
+        </section>
+
+        <!-- Card de Curiosidades Multiespécies -->
+        <section class="pet-fact-card">
+            <div class="fact-header">
+                <i class="fa-solid fa-lightbulb fact-icon"></i>
+                <div>
+                    <h4>Curiosidades & Fatos Animal no Brasil 🐶🐱🐰🦜</h4>
+                    <p id="factText">Carregando uma curiosidade incrível sobre os animais...</p>
+                </div>
+            </div>
+            <button type="button" class="btn-refresh-fact" onclick="loadPetFact()">
+                <i class="fa-solid fa-rotate"></i> Outra curiosidade
+            </button>
+        </section>
+
+        <!-- Seletor de Modo de Busca: Animais ou Instituições -->
+        <section class="search-filter-section">
+            <div class="search-mode-tabs">
+                <button type="button" class="search-mode-tab active" id="tabModePets" onclick="switchSearchMode('pets')">
+                    <i class="fa-solid fa-paw"></i> Buscar Animais
+                </button>
+                <button type="button" class="search-mode-tab" id="tabModeOngs" onclick="switchSearchMode('instituicoes')">
+                    <i class="fa-solid fa-building-ngo"></i> Buscar Instituições / ONGs
+                </button>
+            </div>
+
+            <!-- Busca & Filtros de Pets -->
+            <div id="filterBlockPets">
+                <div class="search-bar-wrapper">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="searchInput" placeholder="Busque por nome do pet, raça ou instituição..." oninput="filterPets()">
+                </div>
+
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label for="filterEspecie"><i class="fa-solid fa-paw"></i> Espécie</label>
+                        <select id="filterEspecie" onchange="filterPets()">
+                            <option value="">Todas as espécies</option>
+                            <option value="Cão">Cão</option>
+                            <option value="Gato">Gato</option>
+                            <option value="Coelho">Coelho</option>
+                            <option value="Ave">Ave</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="filterPorte"><i class="fa-solid fa-weight-hanging"></i> Porte</label>
+                        <select id="filterPorte" onchange="filterPets()">
+                            <option value="">Todos os portes</option>
+                            <option value="Pequeno">Pequeno</option>
+                            <option value="Médio">Médio</option>
+                            <option value="Grande">Grande</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="filterSexo"><i class="fa-solid fa-venus-mars"></i> Sexo</label>
+                        <select id="filterSexo" onchange="filterPets()">
+                            <option value="">Ambos os sexos</option>
+                            <option value="M">Macho</option>
+                            <option value="F">Fêmea</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="filterStatus"><i class="fa-solid fa-filter"></i> Status / Finalidade</label>
+                        <select id="filterStatus" onchange="filterPets()">
+                            <option value="">Todos os status</option>
+                            <option value="Adoção">Adoção</option>
+                            <option value="Apadrinhamento">Apadrinhamento</option>
+                            <option value="Ambos">Ambos</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Busca & Filtros de Instituições -->
+            <div id="filterBlockOngs" class="hidden">
+                <div class="search-bar-wrapper">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="searchOngInput" placeholder="Busque por razão social, cidade ou CNPJ da instituição..." oninput="filterInstituicoes()">
+                </div>
+
+                <div class="filters-grid" style="grid-template-columns: repeat(2, 1fr);">
+                    <div class="filter-group">
+                        <label for="filterOngCidade"><i class="fa-solid fa-city"></i> Cidade</label>
+                        <input type="text" id="filterOngCidade" placeholder="Ex: Goiânia, São Paulo, Manaus..." oninput="filterInstituicoes()">
+                    </div>
+                    <div class="filter-group">
+                        <label for="filterOngEstado"><i class="fa-solid fa-map-location-dot"></i> Estado (UF)</label>
+                        <select id="filterOngEstado" onchange="filterInstituicoes()">
+                            <option value="">Todos os estados</option>
+                            <option value="AM">AM</option>
+                            <option value="GO">GO</option>
+                            <option value="MG">MG</option>
+                            <option value="PE">PE</option>
+                            <option value="RJ">RJ</option>
+                            <option value="SP">SP</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Catálogo de Pets -->
+        <section class="catalog-section" id="sectionPets">
+            <div class="section-header">
+                <h3>Animais Disponíveis (<span id="petCount">0</span>)</h3>
+            </div>
+
+            <div class="pet-grid" id="petGridContainer"></div>
+
+            <div id="noResults" class="no-results hidden">
+                <i class="fa-solid fa-face-frown empty-icon"></i>
+                <h4>Nenhum pet encontrado</h4>
+                <p>Tente ajustar seus filtros de busca para encontrar outros companheiros.</p>
+            </div>
+        </section>
+
+        <!-- Catálogo de Instituições / ONGs -->
+        <section class="catalog-section hidden" id="sectionOngs">
+            <div class="section-header">
+                <h3>Instituições Parceiras (<span id="ongCount">0</span>)</h3>
+            </div>
+
+            <div class="ongs-grid" id="ongGridContainer"></div>
+
+            <div id="noResultsOngs" class="no-results hidden">
+                <i class="fa-solid fa-building-circle-exclamation empty-icon"></i>
+                <h4>Nenhuma instituição encontrada</h4>
+                <p>Verifique o termo de busca ou tente limpar o filtro de estado.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:8000/api';
+        let allPets = [];
+        let allInstituicoes = [];
+        let currentMode = 'pets';
+
+        const brasilPetFacts = [
+            "O Brasil possui mais de 149 milhões de animais de estimação, sendo o 3º país com a maior população de pets no mundo!",
+            "Os Vira-Latas (Sem Raça Definida - SRD) representam mais de 40% dos cães e gatos nos lares brasileiros.",
+            "Os coelhos usam saltos e giros no ar (comportamento chamado 'binky') para expressar extrema felicidade!",
+            "Calopsitas e papagaios conseguem reconhecer rostos humanos e associar vozes específicas a seus tutores.",
+            "A castração preventiva reduz em até 90% o risco de tumores e evita fugas e comportamentos agressivos.",
+            "Os gatos não possuem receptores para o sabor doce e usam seus bigodes para medir a largura dos espaços.",
+            "O olfato de um cachorro é até 100 mil vezes mais apurado que o nosso, conseguindo detectar variações de odor humano.",
+            "Apadrinhar um pet ajuda ONGs no Brasil a cobrirem custos essenciais com ração e tratamentos contínuos."
+        ];
+
+        let lastFactIndex = -1;
+
+        function switchSearchMode(mode) {
+            currentMode = mode;
+            const tabPets = document.getElementById('tabModePets');
+            const tabOngs = document.getElementById('tabModeOngs');
+            const blockPets = document.getElementById('filterBlockPets');
+            const blockOngs = document.getElementById('filterBlockOngs');
+            const secPets = document.getElementById('sectionPets');
+            const secOngs = document.getElementById('sectionOngs');
+
+            if (mode === 'pets') {
+                tabPets.classList.add('active');
+                tabOngs.classList.remove('active');
+                blockPets.classList.remove('hidden');
+                blockOngs.classList.add('hidden');
+                secPets.classList.remove('hidden');
+                secOngs.classList.add('hidden');
+                filterPets();
+            } else {
+                tabOngs.classList.add('active');
+                tabPets.classList.remove('active');
+                blockOngs.classList.remove('hidden');
+                blockPets.classList.add('hidden');
+                secOngs.classList.remove('hidden');
+                secPets.classList.add('hidden');
+                filterInstituicoes();
+            }
+        }
+
+        function getSpeciesIcon(especie) {
+            const esp = (especie || '').toLowerCase();
+            if (esp.includes('cão') || esp.includes('cachorro')) return 'fa-dog';
+            if (esp.includes('gato')) return 'fa-cat';
+            if (esp.includes('coelho')) return 'fa-carrot';
+            if (esp.includes('papagaio') || esp.includes('calopsita') || esp.includes('ave')) return 'fa-dove';
+            return 'fa-paw';
+        }
+
+        function getStatusBadgeClass(status) {
+            if (status === 'Adoção') return 'badge-adocao';
+            if (status === 'Apadrinhamento') return 'badge-apadrinhamento';
+            if (status === 'Ambos') return 'badge-ambos';
+            return 'badge-adotado';
+        }
+
+        async function carregarEstatisticasBrasil() {
+            try {
+                const res = await fetch(`${API_URL}/dashboard/estatisticas-brasil`);
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('statSobTutela').textContent = data.animaisSobTutela;
+                    document.getElementById('statTaxaSucesso').textContent = data.taxaSucesso;
+                    document.getElementById('statAuditados').textContent = data.prontuariosAuditados;
+                }
+            } catch (e) {
+                console.log('Usando valores padrão de estatísticas.');
+            }
+        }
+
+        async function carregarPetsDoBanco() {
+            try {
+                const res = await fetch(`${API_URL}/animais`);
+                if (res.ok) {
+                    allPets = await res.json();
+                } else {
+                    throw new Error('Falha na resposta da API');
+                }
+            } catch (err) {
+                console.warn('Carregamento via banco falhou, usando lista padrão:', err);
+                allPets = [
+                    { id_animal: 1, nome: "Thor", especie: "Cão", raca: "Vira-lata (SRD)", idade: 3, porte: "Médio", sexo: "M", status: "Adoção", observacao: "Dócil e brincalhão.", instituicao: "Associação Patas da Amazônia", foto: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80" },
+                    { id_animal: 2, nome: "Mimi", especie: "Gato", raca: "Siamês", idade: 2, porte: "Pequeno", sexo: "F", status: "Adoção", observacao: "Gosta de ambientes calmos.", instituicao: "Associação Patas da Amazônia", foto: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=80" },
+                    { id_animal: 3, nome: "Louro", especie: "Papagaio", raca: "Papagaio-verdadeiro", idade: 5, porte: "Pequeno", sexo: "M", status: "Ambos", observacao: "Sociável e tagarela.", instituicao: "Associação Patas da Amazônia", foto: "https://images.unsplash.com/photo-1552728089-57bdde30beb3?auto=format&fit=crop&w=600&q=80" },
+                    { id_animal: 7, nome: "Jade", especie: "Gato", raca: "Persa", idade: 3, porte: "Pequeno", sexo: "F", status: "Ambos", observacao: "Ótima para apartamento.", instituicao: "Associação Patas da Amazônia", foto: "https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=600&q=80" }
+                ];
+            }
+            renderPets(allPets);
+        }
+
+        async function carregarInstituicoesDoBanco() {
+            try {
+                const res = await fetch(`${API_URL}/instituicoes`);
+                if (res.ok) {
+                    allInstituicoes = await res.json();
+                } else {
+                    throw new Error('Falha na resposta da API');
+                }
+            } catch (err) {
+                console.warn('Carregamento de instituições falhou:', err);
+                allInstituicoes = [];
+            }
+            renderInstituicoes(allInstituicoes);
+        }
+
+        function renderPets(pets) {
+            const container = document.getElementById('petGridContainer');
+            const petCount = document.getElementById('petCount');
+            const noResults = document.getElementById('noResults');
+
+            container.innerHTML = '';
+            petCount.textContent = pets.length;
+
+            if (pets.length === 0) {
+                noResults.classList.remove('hidden');
+                return;
+            }
+
+            noResults.classList.add('hidden');
+
+            pets.forEach(pet => {
+                const card = document.createElement('div');
+                card.className = 'pet-card';
+
+                const statusClass = getStatusBadgeClass(pet.status);
+
+                card.innerHTML = `
+                    <div class="pet-card-image">
+                        <img src="${pet.foto}" alt="${pet.nome}">
+                        <span class="badge ${statusClass}">${pet.status}</span>
+                        <span class="badge-species"><i class="fa-solid ${getSpeciesIcon(pet.especie)}"></i> ${pet.especie}</span>
+                    </div>
+                    <div class="pet-card-content">
+                        <div class="pet-header">
+                            <h4 class="pet-name">${pet.nome}</h4>
+                            <span class="pet-gender ${pet.sexo === 'M' ? 'male' : 'female'}">
+                                <i class="fa-solid ${pet.sexo === 'M' ? 'fa-mars' : 'fa-venus'}"></i>
+                            </span>
+                        </div>
+                        <p class="pet-breed"><i class="fa-solid fa-dna"></i> ${pet.raca || 'SRD'}</p>
+                        
+                        <div class="pet-tags">
+                            <span class="tag"><i class="fa-solid fa-cake-candles"></i> ${pet.idade || 1} ano(s)</span>
+                            <span class="tag"><i class="fa-solid fa-ruler-vertical"></i> Porte ${pet.porte || 'Médio'}</span>
+                        </div>
+
+                        <p class="pet-obs">${pet.observacao || 'Disponível para acolhimento e suporte.'}</p>
+
+                        <div class="pet-ong">
+                            <i class="fa-solid fa-building-ngo"></i> ${pet.instituicao}
+                        </div>
+
+                        <div class="pet-actions">
+                            <a href="detalhes-pet.html?id=${pet.id_animal}" class="btn-details">
+                                Ver Prontuário & Detalhes
+                            </a>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderInstituicoes(ongs) {
+            const container = document.getElementById('ongGridContainer');
+            const ongCount = document.getElementById('ongCount');
+            const noResults = document.getElementById('noResultsOngs');
+
+            container.innerHTML = '';
+            ongCount.textContent = ongs.length;
+
+            if (ongs.length === 0) {
+                noResults.classList.remove('hidden');
+                return;
+            }
+
+            noResults.classList.add('hidden');
+
+            ongs.forEach(ong => {
+                const card = document.createElement('div');
+                card.className = 'ong-card-item';
+
+                const enderecoFormatado = [ong.cidade, ong.estado].filter(Boolean).join(' - ') || 'Brasil';
+                const telFormatado = (ong.telefones && ong.telefones.length > 0) ? ong.telefones[0] : 'Contato com a ONG';
+
+                card.innerHTML = `
+                    <div>
+                        <div class="ong-header-box">
+                            <h4>${ong.razao_social}</h4>
+                            ${ong.selo_verificacao ? '<span class="badge badge-verified"><i class="fa-solid fa-shield-check"></i> Verificada</span>' : ''}
+                        </div>
+                        <p class="ong-meta-line"><i class="fa-solid fa-id-card"></i> CNPJ: ${ong.cnpj || 'Não informado'}</p>
+                        <p class="ong-meta-line"><i class="fa-solid fa-location-dot"></i> ${enderecoFormatado}</p>
+                        <p class="ong-meta-line"><i class="fa-solid fa-phone"></i> ${telFormatado}</p>
+                        <p class="ong-meta-line"><i class="fa-solid fa-envelope"></i> ${ong.email}</p>
+                    </div>
+
+                    <div>
+                        <div class="ong-badges-row">
+                            <span class="ong-badge-stat"><i class="fa-solid fa-paw"></i> ${ong.total_animais || 0} pets cadastrados</span>
+                            <span class="ong-badge-stat" style="color: var(--success-green);"><i class="fa-solid fa-circle-check"></i> ${ong.animais_disponiveis || 0} disponíveis</span>
+                        </div>
+                        <div style="margin-top: 14px;">
+                            <a href="detalhes-instituicao.html?id=${ong.id_usuario}" class="btn-details" style="display: block; text-align: center; text-decoration: none;">
+                                <i class="fa-solid fa-building-ngo"></i> Ver Instituição e Pets
+                            </a>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterPets() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const especie = document.getElementById('filterEspecie').value;
+            const porte = document.getElementById('filterPorte').value;
+            const sexo = document.getElementById('filterSexo').value;
+            const status = document.getElementById('filterStatus').value;
+
+            const filtered = allPets.filter(pet => {
+                const matchesSearch = pet.nome.toLowerCase().includes(search) || 
+                                      (pet.raca && pet.raca.toLowerCase().includes(search)) || 
+                                      (pet.instituicao && pet.instituicao.toLowerCase().includes(search));
+
+                let matchesEspecie = true;
+                if (especie) {
+                    if (especie === 'Ave') {
+                        matchesEspecie = ['ave', 'papagaio', 'calopsita'].includes(pet.especie.toLowerCase());
+                    } else if (especie === 'Outros') {
+                        matchesEspecie = !['cão', 'gato', 'coelho', 'ave', 'papagaio', 'calopsita'].includes(pet.especie.toLowerCase());
+                    } else {
+                        matchesEspecie = pet.especie.toLowerCase() === especie.toLowerCase();
+                    }
+                }
+
+                const matchesPorte = !porte || (pet.porte && pet.porte.toLowerCase() === porte.toLowerCase());
+                const matchesSexo = !sexo || pet.sexo === sexo;
+                const matchesStatus = !status || pet.status.toLowerCase() === status.toLowerCase();
+
+                return matchesSearch && matchesEspecie && matchesPorte && matchesSexo && matchesStatus;
+            });
+
+            renderPets(filtered);
+        }
+
+        function filterInstituicoes() {
+            const search = document.getElementById('searchOngInput').value.toLowerCase();
+            const cidade = document.getElementById('filterOngCidade').value.toLowerCase();
+            const estado = document.getElementById('filterOngEstado').value.toUpperCase();
+
+            const filtered = allInstituicoes.filter(ong => {
+                const matchesSearch = (ong.razao_social && ong.razao_social.toLowerCase().includes(search)) ||
+                                      (ong.cnpj && ong.cnpj.toLowerCase().includes(search)) ||
+                                      (ong.cidade && ong.cidade.toLowerCase().includes(search));
+                
+                const matchesCidade = !cidade || (ong.cidade && ong.cidade.toLowerCase().includes(cidade));
+                const matchesEstado = !estado || (ong.estado && ong.estado.toUpperCase() === estado);
+
+                return matchesSearch && matchesCidade && matchesEstado;
+            });
+
+            renderInstituicoes(filtered);
+        }
+
+        function loadPetFact() {
+            const factText = document.getElementById('factText');
+            let randomIndex;
+            
+            do {
+                randomIndex = Math.floor(Math.random() * brasilPetFacts.length);
+            } while (randomIndex === lastFactIndex && brasilPetFacts.length > 1);
+
+            lastFactIndex = randomIndex;
+            factText.textContent = `"${brasilPetFacts[randomIndex]}"`;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            carregarEstatisticasBrasil();
+            carregarPetsDoBanco();
+            carregarInstituicoesDoBanco();
+            loadPetFact();
+
+            const session = JSON.parse(localStorage.getItem('adotapet_session'));
+            if (session && session.nome) {
+                document.getElementById('navUserName').textContent = session.nome;
+            } else if (session && session.email) {
+                document.getElementById('navUserName').textContent = session.email.split('@')[0];
+            }
+        });
+    </script>
+</body>
+</html>

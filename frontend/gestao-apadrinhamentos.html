@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdotaPet — Acompanhamento de Apadrinhamento</title>
+    <link rel="stylesheet" href="static/ong-portal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="theme-adotante">
+
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-paw paw-logo"></i>
+                <span>Adota<strong>Pet</strong></span>
+            </a>
+            
+            <nav class="nav-menu">
+                <a href="dashboard-adotante.html" class="nav-link"><i class="fa-solid fa-store"></i> Encontrar Pets</a>
+                <a href="acompanhamento-adocoes.html" class="nav-link"><i class="fa-solid fa-heart"></i> Minhas Adoções</a>
+                <a href="gestao-apadrinhamentos.html" class="nav-link active"><i class="fa-solid fa-hand-holding-dollar"></i> Meus Apadrinhamentos</a>
+                <a href="perfil-adotante.html" class="nav-link"><i class="fa-solid fa-user"></i> Meu Perfil</a>
+            </nav>
+
+            <div class="user-menu">
+                <div class="user-info">
+                    <span class="user-name" id="navUserName">Adotante</span>
+                    <span class="user-role">Perfil Adotante / Padrinho</span>
+                </div>
+                <a href="login.html" class="btn-logout" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container" style="max-width: 1200px; margin: 30px auto; padding: 0 20px;">
+        <div class="admin-page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 15px;">
+            <div>
+                <h1 style="font-size: 1.8rem; color: var(--dark-blue); font-weight: 800;">Acompanhamento de Apadrinhamentos</h1>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Visualize o histórico de suas contribuições para custeio, tratamentos e ração dos animais apadrinhados.</p>
+            </div>
+            <div>
+                <a href="dashboard-adotante.html" class="btn btn-primary">
+                    <i class="fa-solid fa-plus"></i> Apadrinhar Outro Pet
+                </a>
+            </div>
+        </div>
+
+        <div class="metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 24px;">
+            <div class="metric-card">
+                <div class="metric-card-info">
+                    <h4>Vínculos Ativos</h4>
+                    <div class="metric-value" id="statVeraAtivos">0</div>
+                </div>
+                <div class="metric-icon-box icon-green">
+                    <i class="fa-solid fa-hand-holding-heart"></i>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-card-info">
+                    <h4>Contribuição Mensal Total</h4>
+                    <div class="metric-value" id="statTotalMensal">R$ 0,00</div>
+                </div>
+                <div class="metric-icon-box icon-orange">
+                    <i class="fa-solid fa-coins"></i>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-card-info">
+                    <h4>Pets Apoiados</h4>
+                    <div class="metric-value" id="statTotalPets">0</div>
+                </div>
+                <div class="metric-icon-box icon-blue">
+                    <i class="fa-solid fa-paw"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Pet Apadrinhado</th>
+                            <th>Instituição Responsável</th>
+                            <th>Tipo de Apoio</th>
+                            <th>Valor Recorrente</th>
+                            <th>Frequência</th>
+                            <th>Data de Início</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaApadrinhamentosBody">
+                        <tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 30px;">Carregando apadrinhamentos...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:8000/api';
+        let todosApadrinhamentos = [];
+
+        async function carregarApadrinhamentos() {
+            const session = JSON.parse(localStorage.getItem('adotapet_session'));
+            const idUsuario = session ? session.id_usuario : 6;
+
+            try {
+                const res = await fetch(`${API_URL}/adotante/${idUsuario}/apadrinhamentos`);
+                if (res.ok) {
+                    todosApadrinhamentos = await res.json();
+                } else {
+                    throw new Error('Falha na rota');
+                }
+                        } catch (e) {
+                console.warn('Erro ao consultar apadrinhamentos:', e);
+                todosApadrinhamentos = [];
+            }
+
+            renderizarApadrinhamentos();
+        }
+
+        function renderizarApadrinhamentos() {
+            const tbody = document.getElementById('tabelaApadrinhamentosBody');
+            tbody.innerHTML = '';
+
+            const ativos = todosApadrinhamentos.filter(a => a.status === 'Ativo');
+            document.getElementById('statVeraAtivos').textContent = ativos.length;
+            document.getElementById('statTotalPets').textContent = todosApadrinhamentos.length;
+
+            const total = ativos.reduce((acc, curr) => acc + Number(curr.valor_recorrente), 0);
+            document.getElementById('statTotalMensal').textContent = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+            if (todosApadrinhamentos.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 30px;">Nenhum apadrinhamento registrado.</td></tr>`;
+                return;
+            }
+
+            todosApadrinhamentos.forEach((p, index) => {
+                let badgeClass = 'badge-ativo';
+                if (p.status === 'Pausado') badgeClass = 'badge-pausado';
+                else if (p.status === 'Encerrado' || p.status === 'Cancelado') badgeClass = 'badge-cancelado';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${p.pet_nome}</strong> <span style="font-size: 0.8rem; color: var(--text-muted);">(${p.pet_especie})</span></td>
+                    <td>${p.ong_nome}</td>
+                    <td><span class="badge badge-info">${p.tipo_de_contribuicao}</span></td>
+                    <td><strong>R$ ${Number(p.valor_recorrente).toFixed(2)}</strong></td>
+                    <td>${p.frequencia}</td>
+                    <td>${p.data_de_inicio}</td>
+                    <td><span class="badge ${badgeClass}">${p.status}</span></td>
+                    <td>
+                        <a href="detalhes-pet.html?id=${p.id_animal}" class="btn btn-secondary btn-sm" title="Ver Animal">
+                            <i class="fa-solid fa-eye"></i> Pet
+                        </a>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const session = JSON.parse(localStorage.getItem('adotapet_session'));
+            if (session && session.nome) {
+                document.getElementById('navUserName').textContent = session.nome;
+            } else if (session && session.email) {
+                document.getElementById('navUserName').textContent = session.email.split('@')[0];
+            }
+            carregarApadrinhamentos();
+        });
+    </script>
+</body>
+</html>

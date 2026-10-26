@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdotaPet — Acompanhamento de Adoções</title>
+    <link rel="stylesheet" href="static/ong-portal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="theme-adotante">
+
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-paw paw-logo"></i>
+                <span>Adota<strong>Pet</strong></span>
+            </a>
+            
+            <nav class="nav-menu">
+                <a href="dashboard-adotante.html" class="nav-link"><i class="fa-solid fa-store"></i> Encontrar Pets</a>
+                <a href="acompanhamento-adocoes.html" class="nav-link active"><i class="fa-solid fa-heart"></i> Minhas Adoções</a>
+                <a href="gestao-apadrinhamentos.html" class="nav-link"><i class="fa-solid fa-hand-holding-dollar"></i> Meus Apadrinhamentos</a>
+                <a href="perfil-adotante.html" class="nav-link"><i class="fa-solid fa-user"></i> Meu Perfil</a>
+            </nav>
+
+            <div class="user-menu">
+                <div class="user-info">
+                    <span class="user-name" id="navUserName">Adotante</span>
+                    <span class="user-role">Perfil Adotante</span>
+                </div>
+                <a href="login.html" class="btn-logout" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container" style="max-width: 1200px; margin: 30px auto; padding: 0 20px;">
+        <div class="admin-page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 15px;">
+            <div>
+                <h1 style="font-size: 1.8rem; color: var(--dark-blue); font-weight: 800;">Acompanhamento de Processos de Adoção</h1>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Consulte o andamento das suas solicitações de adoção e os pareceres emitidos pelas instituições.</p>
+            </div>
+            <div>
+                <a href="dashboard-adotante.html" class="btn btn-primary">
+                    <i class="fa-solid fa-magnifying-glass"></i> Ver Mais Pets
+                </a>
+            </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 20px; padding: 16px 20px;">
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span style="font-weight: 600; color: var(--dark-blue); font-size: 0.9rem;">Filtrar por Status:</span>
+                <button class="btn btn-primary btn-sm" onclick="filtrarProcessos('Todos', this)">Todos (<span id="countTotal">0</span>)</button>
+                <button class="btn btn-secondary btn-sm" onclick="filtrarProcessos('Em Análise', this)">Em Análise</button>
+                <button class="btn btn-secondary btn-sm" onclick="filtrarProcessos('Aprovado', this)">Aprovados</button>
+                <button class="btn btn-secondary btn-sm" onclick="filtrarProcessos('Recusado', this)">Recusados</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Pet</th>
+                            <th>Instituição / ONG</th>
+                            <th>Data de Solicitação</th>
+                            <th>Status do Processo</th>
+                            <th>Data de Conclusão</th>
+                            <th>Parecer / Observações</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaProcessosBody">
+                        <tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">Carregando processos...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:8000/api';
+        let todosProcessos = [];
+        let filtroAtual = 'Todos';
+
+        async function carregarProcessos() {
+            const session = JSON.parse(localStorage.getItem('adotapet_session'));
+            const idUsuario = session ? session.id_usuario : 7;
+
+            try {
+                const res = await fetch(`${API_URL}/adotante/${idUsuario}/adocoes`);
+                if (res.ok) {
+                    todosProcessos = await res.json();
+                } else {
+                    throw new Error('Falha na rota de adoções');
+                }
+                        } catch (e) {
+                console.warn('Erro ao consultar adoções:', e);
+                todosProcessos = [];
+            }
+
+            document.getElementById('countTotal').textContent = todosProcessos.length;
+            renderizarProcessos();
+        }
+
+        function renderizarProcessos() {
+            const tbody = document.getElementById('tabelaProcessosBody');
+            tbody.innerHTML = '';
+
+            const filtrados = todosProcessos.filter(p => {
+                if (filtroAtual === 'Todos') return true;
+                const st = (p.status || '').toLowerCase();
+                const fa = filtroAtual.toLowerCase();
+                return st.includes(fa);
+            });
+
+            if (filtrados.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">Nenhum processo de adoção encontrado.</td></tr>`;
+                return;
+            }
+
+            filtrados.forEach(p => {
+                let badgeClass = 'badge-solicitada';
+                const st = (p.status || '').toLowerCase();
+                if (st.includes('análise') || st.includes('analise')) badgeClass = 'badge-em-analise';
+                else if (st.includes('aprovad')) badgeClass = 'badge-aprovada';
+                else if (st.includes('recusad')) badgeClass = 'badge-recusada';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${p.pet_nome}</strong> <span style="font-size: 0.8rem; color: var(--text-muted);">(${p.pet_especie})</span></td>
+                    <td>${p.ong_nome}</td>
+                    <td>${p.data_solicitacao}</td>
+                    <td><span class="badge ${badgeClass}">${p.status}</span></td>
+                    <td>${p.data_conclusao || '-'}</td>
+                    <td style="max-width: 280px; font-size: 0.88rem; color: #475569;">${p.observacoes}</td>
+                    <td>
+                        <a href="detalhes-pet.html?id=${p.id_animal}" class="btn btn-secondary btn-sm">
+                            <i class="fa-solid fa-eye"></i> Ver Pet
+                        </a>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filtrarProcessos(status, btn) {
+            filtroAtual = status;
+            document.querySelectorAll('.card button').forEach(b => {
+                b.className = 'btn btn-secondary btn-sm';
+            });
+            btn.className = 'btn btn-primary btn-sm';
+            renderizarProcessos();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const session = JSON.parse(localStorage.getItem('adotapet_session'));
+            if (session && session.nome) {
+                document.getElementById('navUserName').textContent = session.nome;
+            } else if (session && session.email) {
+                document.getElementById('navUserName').textContent = session.email.split('@')[0];
+            }
+            carregarProcessos();
+        });
+    </script>
+</body>
+</html>

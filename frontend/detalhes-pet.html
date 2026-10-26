@@ -14,15 +14,16 @@
 
     <header class="navbar">
         <div class="nav-container">
-            <a href="catalogo.html" class="logo">
+            <a href="index.html" class="logo">
                 <i class="fa-solid fa-paw paw-logo"></i>
                 <span>Adota<strong>Pet</strong></span>
             </a>
             
             <nav class="nav-menu">
-                <a href="catalogo.html" class="nav-link active"><i class="fa-solid fa-store"></i> Encontrar Pets</a>
-                <a href="#" class="nav-link"><i class="fa-solid fa-heart"></i> Minhas Adoções</a>
-                <a href="#" class="nav-link"><i class="fa-solid fa-hand-holding-dollar"></i> Apadrinhamentos</a>
+                <a href="dashboard-adotante.html" class="nav-link active"><i class="fa-solid fa-store"></i> Encontrar Pets</a>
+                <a href="acompanhamento-adocoes.html" class="nav-link"><i class="fa-solid fa-heart"></i> Minhas Adoções</a>
+                <a href="gestao-apadrinhamentos.html" class="nav-link"><i class="fa-solid fa-hand-holding-dollar"></i> Meus Apadrinhamentos</a>
+                <a href="perfil-adotante.html" class="nav-link"><i class="fa-solid fa-user"></i> Meu Perfil</a>
             </nav>
 
             <div class="user-menu">
@@ -37,11 +38,10 @@
 
     <main class="main-content">
         <div class="breadcrumb">
-            <a href="catalogo.html"><i class="fa-solid fa-arrow-left"></i> Voltar para o Catálogo</a>
+            <a href="dashboard-adotante.html"><i class="fa-solid fa-arrow-left"></i> Voltar para o Catálogo</a>
         </div>
 
         <div class="pet-details-container">
-            <!-- Galeria e Ações Rápidas -->
             <div class="gallery-column">
                 <div class="main-photo-wrapper">
                     <img id="mainPetPhoto" src="" alt="Foto do Pet">
@@ -49,7 +49,6 @@
                 </div>
                 <div class="thumbnails-row" id="thumbnailsContainer"></div>
 
-                <!-- Card de Ação Rápida -->
                 <div class="action-card">
                     <h3>Gostou do <span id="actionPetName">Pet</span>?</h3>
                     <p>Você pode abrir um pedido formal de adoção ou contribuir mensalmente para o seu sustento.</p>
@@ -64,7 +63,6 @@
                 </div>
             </div>
 
-            <!-- Informações e Prontuário -->
             <div class="info-column">
                 <div class="pet-header-info">
                     <div class="title-row">
@@ -74,7 +72,6 @@
                     <p class="pet-breed" id="petBreed"><i class="fa-solid fa-dna"></i> Raça</p>
                 </div>
 
-                <!-- Características em Grid -->
                 <div class="specs-grid">
                     <div class="spec-item">
                         <i class="fa-solid fa-paw"></i>
@@ -106,13 +103,11 @@
                     </div>
                 </div>
 
-                <!-- Observações e História -->
                 <div class="info-block">
                     <h3><i class="fa-solid fa-quote-left"></i> Sobre o Pet</h3>
                     <p id="petObs">Carregando história do pet...</p>
                 </div>
 
-                <!-- Prontuário Veterinário -->
                 <div class="info-block">
                     <h3><i class="fa-solid fa-file-medical"></i> Prontuário Veterinário (Histórico Clínico)</h3>
                     <div class="table-responsive">
@@ -129,12 +124,11 @@
                     </div>
                 </div>
 
-                <!-- Informações da Instituição / ONG -->
                 <div class="info-block ong-card">
                     <div class="ong-header">
                         <div>
                             <span class="ong-label">Instituição Responsável</span>
-                            <h4 id="ongName">Nome da ONG</h4>
+                            <h4 id="ongName">Nome da Instituição</h4>
                         </div>
                         <span id="ongVerifiedBadge" class="verified-badge"><i class="fa-solid fa-shield-check"></i> Verificada</span>
                     </div>
@@ -149,132 +143,88 @@
     </main>
 
     <script>
-        const mockPetsDatabase = {
-            1: {
-                id_animal: 1,
-                nome: "Thor",
-                especie: "Cão",
-                raca: "Vira-lata (SRD)",
-                idade: "2 anos",
-                porte: "Médio",
-                sexo: "M",
-                status: "Disponível",
-                observacao: "Thor foi resgatado em uma avenida movimentada. É extremamente dócil, ativo, brincalhão e se dá muito bem com crianças e outros cães.",
-                fotos: [
-                    "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80",
-                    "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=800&q=80",
-                    "https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=800&q=80"
-                ],
-                prontuario: [
-                    { data: "10/01/2026", procedimento: "Consulta & Exames Geral", descricao: "Hemograma completo sem alterações. Animal saudável." },
-                    { data: "15/01/2026", procedimento: "Vacinação V10", descricao: "Primeira dose da vacina V10 aplicada." },
-                    { data: "05/02/2026", procedimento: "Castração", descricao: "Procedimento cirúrgico realizado sem intercorrências. Recuperação excelente." },
-                    { data: "20/02/2026", procedimento: "Vermifugação", descricao: "Dose de vermífugo administrada conforme o peso." }
-                ],
-                instituicao: {
-                    razao_social: "ONG Patas de Luz",
-                    cnpj: "12.345.678/0001-90",
-                    selo_verificacao: true,
-                    endereco: "Rua das Flores, 120, Setor Bueno - Goiânia/GO",
-                    telefone: "(62) 98888-7777"
-                }
-            },
-            2: {
-                id_animal: 2,
-                nome: "Luna",
-                especie: "Gato",
-                raca: "Siamês",
-                idade: "1 ano",
-                porte: "Pequeno",
-                sexo: "F",
-                status: "Disponível",
-                observacao: "Luna é muito dócil, adora um colo quentinho e é habituada a caixa de areia. Ideal para apartamentos.",
-                fotos: [
-                    "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=800&q=80",
-                    "https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=800&q=80"
-                ],
-                prontuario: [
-                    { data: "02/02/2026", procedimento: "Consulta Felina", descricao: "Teste FeLV/FIV Negativo. Excelente estado de saúde." },
-                    { data: "12/02/2026", procedimento: "Vacina Quádrupla Felina", descricao: "Dose anual aplicada com sucesso." },
-                    { data: "01/03/2026", procedimento: "Castração", descricao: "Ovarioisterectomia realizada. Cicatrização concluída." }
-                ],
-                instituicao: {
-                    razao_social: "Abrigo Amigo Animal",
-                    cnpj: "98.765.432/0001-10",
-                    selo_verificacao: true,
-                    endereco: "Av. Central, 500 - Goiânia/GO",
-                    telefone: "(62) 99911-2233"
-                }
-            },
-            3: {
-                id_animal: 3,
-                nome: "Bob",
-                especie: "Cão",
-                raca: "Golden Retriever",
-                idade: "4 anos",
-                porte: "Grande",
-                sexo: "M",
-                status: "Disponível para Apadrinhamento",
-                observacao: "Bob precisa de acompanhamento contínuo de fisioterapia após resgate de atropelamento. Um cão cheio de amor e gratidão.",
-                fotos: [
-                    "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=800&q=80"
-                ],
-                prontuario: [
-                    { data: "15/12/2025", procedimento: "Cirurgia Ortopédica", descricao: "Correção de fratura em pata traseira." },
-                    { data: "10/01/2026", procedimento: "Fisioterapia", descricao: "Sessão 05 de 20. Boa evolução de mobilidade." }
-                ],
-                instituicao: {
-                    razao_social: "ONG Resgate & Vida",
-                    cnpj: "45.111.222/0001-33",
-                    selo_verificacao: true,
-                    endereco: "Rua 10, nº 45 - Goiânia/GO",
-                    telefone: "(62) 98444-5566"
-                }
-            }
-        };
+        const API_URL = 'http://127.0.0.1:8000/api';
 
         function getPetIdFromURL() {
             const params = new URLSearchParams(window.location.search);
             return params.get('id') || '1';
         }
 
-        function loadPetDetails() {
+        async function loadPetDetails() {
             const id = getPetIdFromURL();
-            const pet = mockPetsDatabase[id] || mockPetsDatabase['1'];
+            let pet = null;
 
-            // Fotos
+            try {
+                const res = await fetch(`${API_URL}/animais/${id}`);
+                if (res.ok) {
+                    pet = await res.json();
+                } else {
+                    throw new Error('Falha ao obter pet da API');
+                }
+            } catch (e) {
+                console.warn('Erro ao carregar do backend, usando dados locais de fallback:', e);
+                pet = {
+                    id_animal: id,
+                    nome: "Thor",
+                    especie: "Cão",
+                    raca: "Vira-lata (SRD)",
+                    idade: "3 ano(s)",
+                    porte: "Médio",
+                    sexo: "M",
+                    status: "Adoção",
+                    observacao: "Muito carinhoso e dócil com crianças.",
+                    fotos: [
+                        "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80",
+                        "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=800&q=80"
+                    ],
+                    prontuario: [
+                        { data: "15/02/2025", procedimento: "Consulta de Acompanhamento", descricao: "Exame físico completo. Animal dócil e apto para adoção." }
+                    ],
+                    instituicao: {
+                        razao_social: "Associação Patas da Amazônia",
+                        cnpj: "12.345.678/0001-90",
+                        selo_verificacao: true,
+                        endereco: "Avenida Efigênio Salles, 1200 - Manaus/AM",
+                        telefone: "(92) 98111-2020"
+                    }
+                };
+            }
+
             const mainPhoto = document.getElementById('mainPetPhoto');
-            mainPhoto.src = pet.fotos[0];
+            mainPhoto.src = (pet.fotos && pet.fotos.length > 0) ? pet.fotos[0] : 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80';
             
             const thumbnailsContainer = document.getElementById('thumbnailsContainer');
             thumbnailsContainer.innerHTML = '';
-            pet.fotos.forEach((foto, index) => {
-                const img = document.createElement('img');
-                img.src = foto;
-                img.className = index === 0 ? 'active' : '';
-                img.onclick = () => {
-                    mainPhoto.src = foto;
-                    document.querySelectorAll('.thumbnails-row img').forEach(i => i.classList.remove('active'));
-                    img.classList.add('active');
-                };
-                thumbnailsContainer.appendChild(img);
-            });
+            if (pet.fotos) {
+                pet.fotos.forEach((foto, index) => {
+                    const img = document.createElement('img');
+                    img.src = foto;
+                    img.className = index === 0 ? 'active' : '';
+                    img.onclick = () => {
+                        mainPhoto.src = foto;
+                        document.querySelectorAll('.thumbnails-row img').forEach(i => i.classList.remove('active'));
+                        img.classList.add('active');
+                    };
+                    thumbnailsContainer.appendChild(img);
+                });
+            }
 
-            // Badge de Status
             const badge = document.getElementById('petStatusBadge');
             badge.textContent = pet.status;
-            badge.className = `badge ${pet.status === 'Disponível' ? 'badge-available' : 'badge-sponsorship'}`;
+            let statusColor = '#10B981';
+            if (pet.status === 'Apadrinhamento') statusColor = '#F97316';
+            else if (pet.status === 'Ambos') statusColor = '#2563EB';
+            else if (pet.status === 'Adotado') statusColor = '#64748B';
+            badge.style.background = statusColor;
 
-            // Nomes e Textos
             document.getElementById('petName').textContent = pet.nome;
             document.getElementById('actionPetName').textContent = pet.nome;
-            document.getElementById('petBreed').innerHTML = `<i class="fa-solid fa-dna"></i> ${pet.raca}`;
+            document.getElementById('petBreed').innerHTML = `<i class="fa-solid fa-dna"></i> ${pet.raca || 'SRD'}`;
             document.getElementById('petEspecie').textContent = pet.especie;
             document.getElementById('petAge').textContent = pet.idade;
-            document.getElementById('petPorte').textContent = pet.porte;
-            document.getElementById('petObs').textContent = pet.observacao;
+            document.getElementById('petPorte').textContent = pet.porte || 'Médio';
+            document.getElementById('petObs').textContent = pet.observacao || 'Nenhuma observação especial informada.';
 
-            // Sexo
             const genderIcon = document.getElementById('petGenderIcon');
             const genderText = document.getElementById('petGenderText');
             if (pet.sexo === 'M') {
@@ -285,26 +235,35 @@
                 genderText.textContent = "Fêmea";
             }
 
-            // Prontuário Veterinário
             const medicalBody = document.getElementById('medicalHistoryBody');
             medicalBody.innerHTML = '';
-            pet.prontuario.forEach(item => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td><strong>${item.data}</strong></td>
-                    <td><span class="procedure-tag">${item.procedimento}</span></td>
-                    <td>${item.descricao}</td>
-                `;
-                medicalBody.appendChild(row);
-            });
+            if (pet.prontuario && pet.prontuario.length > 0) {
+                pet.prontuario.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><strong>${item.data}</strong></td>
+                        <td><span class="procedure-tag">${item.procedimento}</span></td>
+                        <td>${item.descricao}</td>
+                    `;
+                    medicalBody.appendChild(row);
+                });
+            } else {
+                medicalBody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--text-muted); padding: 15px;">Nenhum procedimento registrado no prontuário até o momento.</td></tr>`;
+            }
 
-            // Instituição
-            document.getElementById('ongName').textContent = pet.instituicao.razao_social;
-            document.getElementById('ongCnpj').innerHTML = `<i class="fa-solid fa-id-card"></i> CNPJ: ${pet.instituicao.cnpj}`;
-            document.getElementById('ongAddress').innerHTML = `<i class="fa-solid fa-location-dot"></i> Endereço: ${pet.instituicao.endereco}`;
-            document.getElementById('ongPhone').innerHTML = `<i class="fa-solid fa-phone"></i> Telefone: ${pet.instituicao.telefone}`;
+            if (pet.instituicao) {
+                document.getElementById('ongName').textContent = pet.instituicao.razao_social;
+                document.getElementById('ongCnpj').innerHTML = `<i class="fa-solid fa-id-card"></i> CNPJ: ${pet.instituicao.cnpj}`;
+                document.getElementById('ongAddress').innerHTML = `<i class="fa-solid fa-location-dot"></i> Endereço: ${pet.instituicao.endereco}`;
+                document.getElementById('ongPhone').innerHTML = `<i class="fa-solid fa-phone"></i> Telefone: ${pet.instituicao.telefone}`;
+                
+                if (!pet.instituicao.selo_verificacao) {
+                    document.getElementById('ongVerifiedBadge').style.display = 'none';
+                } else {
+                    document.getElementById('ongVerifiedBadge').style.display = 'inline-flex';
+                }
+            }
 
-            // Links dos Botões de Ação
             document.getElementById('btnAdopt').href = `formulario-adocao.html?id=${pet.id_animal}`;
             document.getElementById('btnSponsor').href = `modal-apadrinhamento.html?id=${pet.id_animal}`;
         }
@@ -313,7 +272,9 @@
             loadPetDetails();
 
             const session = JSON.parse(localStorage.getItem('adotapet_session'));
-            if (session && session.email) {
+            if (session && session.nome) {
+                document.getElementById('navUserName').textContent = session.nome;
+            } else if (session && session.email) {
                 document.getElementById('navUserName').textContent = session.email.split('@')[0];
             }
         });

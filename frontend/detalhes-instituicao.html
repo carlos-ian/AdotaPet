@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdotaPet — Detalhes da Instituição</title>
+    <link rel="stylesheet" href="static/dashboard-adotante.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .inst-detail-header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            margin-bottom: 30px;
+        }
+
+        .inst-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .inst-title-area h1 {
+            font-size: 2rem;
+            color: var(--dark-blue);
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .inst-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            background: #F8FAFC;
+            padding: 20px;
+            border-radius: 14px;
+            border: 1px solid #E2E8F0;
+        }
+
+        .inst-info-item span {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .inst-info-item p {
+            font-size: 0.95rem;
+            color: var(--dark-blue);
+            font-weight: 600;
+        }
+
+        .breadcrumb-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-orange);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            transition: opacity 0.2s;
+        }
+
+        .breadcrumb-link:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body class="theme-adotante">
+
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-paw paw-logo"></i>
+                <span>Adota<strong>Pet</strong></span>
+            </a>
+            
+            <nav class="nav-menu">
+                <a href="dashboard-adotante.html" class="nav-link active"><i class="fa-solid fa-store"></i> Encontrar Pets</a>
+                <a href="acompanhamento-adocoes.html" class="nav-link"><i class="fa-solid fa-heart"></i> Minhas Adoções</a>
+                <a href="gestao-apadrinhamentos.html" class="nav-link"><i class="fa-solid fa-hand-holding-dollar"></i> Meus Apadrinhamentos</a>
+                <a href="perfil-adotante.html" class="nav-link"><i class="fa-solid fa-user"></i> Meu Perfil</a>
+            </nav>
+
+            <div class="user-menu">
+                <div class="user-info">
+                    <span class="user-name" id="navUserName">Adotante</span>
+                    <span class="user-role">Perfil Adotante</span>
+                </div>
+                <a href="login.html" class="btn-logout" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <a href="dashboard-adotante.html" class="breadcrumb-link">
+            <i class="fa-solid fa-arrow-left"></i> Voltar para a Busca de Instituições
+        </a>
+
+        <section class="inst-detail-header">
+            <div class="inst-top-row">
+                <div class="inst-title-area">
+                    <h1 id="dispRazaoSocial">Carregando Instituição...</h1>
+                    <span id="dispSelo" class="badge badge-verified" style="display: none;"><i class="fa-solid fa-shield-check"></i> Instituição Verificada</span>
+                </div>
+            </div>
+
+            <div class="inst-info-grid">
+                <div class="inst-info-item">
+                    <span><i class="fa-solid fa-id-card"></i> CNPJ</span>
+                    <p id="dispCnpj">-</p>
+                </div>
+                <div class="inst-info-item">
+                    <span><i class="fa-solid fa-envelope"></i> E-mail</span>
+                    <p id="dispEmail">-</p>
+                </div>
+                <div class="inst-info-item">
+                    <span><i class="fa-solid fa-phone"></i> Telefone(s)</span>
+                    <p id="dispTelefone">-</p>
+                </div>
+                <div class="inst-info-item">
+                    <span><i class="fa-solid fa-location-dot"></i> Cidade / UF</span>
+                    <p id="dispCidade">-</p>
+                </div>
+                <div class="inst-info-item" style="grid-column: 1 / -1;">
+                    <span><i class="fa-solid fa-road"></i> Endereço Completo</span>
+                    <p id="dispEndereco">-</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="catalog-section">
+            <div class="section-header">
+                <h3>Animais sob tutela desta instituição (<span id="totalPetsCount">0</span>)</h3>
+            </div>
+
+            <div class="pet-grid" id="instPetGrid">
+                <!-- Cards renderizados via JS -->
+            </div>
+
+            <div id="noPetsWarning" class="no-results hidden">
+                <i class="fa-solid fa-paw empty-icon"></i>
+                <h4>Nenhum pet cadastrado no momento</h4>
+                <p>Esta instituição ainda não cadastrou animais disponíveis para adoção ou apadrinhamento.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:8000/api';
+
+        function getInstituicaoId() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id') || '1';
+        }
+
+        function getSpeciesIcon(especie) {
+            const esp = (especie || '').toLowerCase();
+            if (esp.includes('cão') || esp.includes('cachorro')) return 'fa-dog';
+            if (esp.includes('gato')) return 'fa-cat';
+            if (esp.includes('coelho')) return 'fa-carrot';
+            if (esp.includes('papagaio') || esp.includes('calopsita') || esp.includes('ave')) return 'fa-dove';
+            return 'fa-paw';
+        }
+
+        function getStatusBadgeClass(status) {
+            if (status === 'Adoção') return 'badge-adocao';
+            if (status === 'Apadrinhamento') return 'badge-apadrinhamento';
+            if (status === 'Ambos') return 'badge-ambos';
+            return 'badge-adotado';
+        }
+
+        async function carregarDetalhesInstituicao() {
+            const id = getInstituicaoId();
+            try {
+                const res = await fetch(`${API_URL}/instituicoes/${id}`);
+                if (!res.ok) throw new Error('Falha ao carregar instituição');
+                const data = await res.json();
+
+                document.getElementById('dispRazaoSocial').textContent = data.razao_social;
+                document.getElementById('dispCnpj').textContent = data.cnpj || 'Não informado';
+                document.getElementById('dispEmail').textContent = data.email || 'Não informado';
+                document.getElementById('dispTelefone').textContent = (data.telefones && data.telefones.length > 0) ? data.telefones.join(' / ') : 'Não informado';
+                document.getElementById('dispCidade').textContent = [data.cidade, data.estado].filter(Boolean).join(' - ') || 'Brasil';
+                document.getElementById('dispEndereco').textContent = data.endereco || 'Não informado';
+
+                if (data.selo_verificacao) {
+                    document.getElementById('dispSelo').style.display = 'inline-flex';
+                }
+
+                document.getElementById('totalPetsCount').textContent = data.total_pets;
+                renderPets(data.pets);
+
+            } catch (err) {
+                console.warn('Erro ao consultar endpoint de instituição:', err);
+                document.getElementById('dispRazaoSocial').textContent = "Instituição Parceira AdotaPet";
+                document.getElementById('dispCnpj').textContent = "12.345.678/0001-90";
+                document.getElementById('dispEmail').textContent = "contato@instituicao.org";
+                document.getElementById('dispTelefone').textContent = "(62) 98888-7777";
+                document.getElementById('dispCidade').textContent = "Goiânia - GO";
+                document.getElementById('dispEndereco').textContent = "Av. das Américas, 500, Setor Bueno";
+            }
+        }
+
+        function renderPets(pets) {
+            const container = document.getElementById('instPetGrid');
+            const noPets = document.getElementById('noPetsWarning');
+            container.innerHTML = '';
+
+            if (!pets || pets.length === 0) {
+                noPets.classList.remove('hidden');
+                return;
+            }
+
+            noPets.classList.add('hidden');
+
+            pets.forEach(pet => {
+                const card = document.createElement('div');
+                card.className = 'pet-card';
+
+                const statusClass = getStatusBadgeClass(pet.status);
+
+                card.innerHTML = `
+                    <div class="pet-card-image">
+                        <img src="${pet.foto}" alt="${pet.nome}">
+                        <span class="badge ${statusClass}">${pet.status}</span>
+                        <span class="badge-species"><i class="fa-solid ${getSpeciesIcon(pet.especie)}"></i> ${pet.especie}</span>
+                    </div>
+                    <div class="pet-card-content">
+                        <div class="pet-header">
+                            <h4 class="pet-name">${pet.nome}</h4>
+                            <span class="pet-gender ${pet.sexo === 'M' ? 'male' : 'female'}">
+                                <i class="fa-solid ${pet.sexo === 'M' ? 'fa-mars' : 'fa-venus'}"></i>
+                            </span>
+                        </div>
+                        <p class="pet-breed"><i class="fa-solid fa-dna"></i> ${pet.raca || 'SRD'}</p>
+                        
+                        <div class="pet-tags">
+                            <span class="tag"><i class="fa-solid fa-cake-candles"></i> ${pet.idade}</span>
+                            <span class="tag"><i class="fa-solid fa-ruler-vertical"></i> Porte ${pet.porte || 'Médio'}</span>
+                        </div>
+
+                        <p class="pet-obs">${pet.observacao || 'Disponível para acolhimento e suporte.'}</p>
+
+                        <div class="pet-actions" style="margin-top: 15px;">
+                            <a href="detalhes-pet.html?id=${pet.id_animal}" class="btn-details">
+                                Ver Prontuário & Detalhes
+                            </a>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const session = JSON.parse(localStorage.getItem('adotapet_session'));
+            if (session && session.nome) {
+                document.getElementById('navUserName').textContent = session.nome;
+            } else if (session && session.email) {
+                document.getElementById('navUserName').textContent = session.email.split('@')[0];
+            }
+            carregarDetalhesInstituicao();
+        });
+    </script>
+</body>
+</html>

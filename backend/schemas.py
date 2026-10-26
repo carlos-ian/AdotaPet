@@ -1,14 +1,11 @@
-# backend/schemas.py
 from pydantic import BaseModel, EmailStr
 from typing import Optional, List
 
-# Schema para o corpo do JSON Usuário (Login)
 class LoginSchema(BaseModel):
     email: EmailStr
     senha: str
     tipo_usuario: str
 
-# Schema para o corpo do JSON de Usuário
 class RegistroSchema(BaseModel):
     email: EmailStr
     senha: str
@@ -29,3 +26,15 @@ class RegistroSchema(BaseModel):
     
     razao_social: Optional[str] = None
     cnpj: Optional[str] = None
+
+class AdocaoSchema(BaseModel):
+    id_adotante: int
+    id_animal: int
+    observacao: Optional[str] = None
+
+class ApadrinhamentoSchema(BaseModel):
+    id_adotante: int
+    id_animal: int
+    tipo_de_contribuicao: str
+    valor_recorrente: float
+    frequencia: str
