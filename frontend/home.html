@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdotaPet — Conectando Amores, Transformando Vidas</title>
+    <link rel="stylesheet" href="static/home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Header Navbar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-paw paw-logo"></i>
+                <span>Adota<strong>Pet</strong></span>
+            </a>
+            
+            <nav class="nav-menu">
+                <a href="#pets-carrossel" class="nav-link"><i class="fa-solid fa-magnifying-glass"></i> Ver Pets</a>
+                <a href="#como-funciona" class="nav-link"><i class="fa-solid fa-circle-info"></i> Como Funciona</a>
+                <a href="#sobre-projeto" class="nav-link"><i class="fa-solid fa-lightbulb"></i> Sobre o Projeto</a>
+            </nav>
+
+            <div class="user-menu">
+                <a href="login.html" class="btn btn-outline-primary btn-sm">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar
+                </a>
+                <a href="criar-conta.html" class="btn btn-primary btn-sm">
+                    <i class="fa-solid fa-user-plus"></i> Cadastre-se
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>Dê um novo lar para quem só quer te dar <span>amor</span>.</h1>
+                <p>O AdotaPet centraliza e automatiza todo o ciclo de adoção responsável e apadrinhamento, conectando ONGs comprometidas a famílias e tutores dedicados em todo o Brasil.</p>
+                <div class="hero-actions">
+                    <a href="login.html" class="btn btn-orange" style="font-size: 1.05rem; padding: 14px 28px;">
+                        <i class="fa-solid fa-heart"></i> Quero Adotar um Pet
+                    </a>
+                </div>
+            </div>
+            <div class="hero-card">
+                <span class="hero-badge-tag"><i class="fa-solid fa-sparkles"></i> Pet da Semana</span>
+                <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=800" alt="Pet em Destaque" class="hero-card-img" id="heroFeaturedImg">
+                <h3 id="heroFeaturedName" style="color: white; margin-bottom: 4px;">Thor (Vira-lata)</h3>
+                <p id="heroFeaturedDesc" style="color: #CBD5E1; font-size: 0.9rem; margin-bottom: 12px;">Porte Médio • Vacinado e Castrado</p>
+                <a href="login.html" class="btn btn-primary btn-sm" style="width: 100%;">
+                    Conhecer História Completa
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Estatísticas vindas do Banco de Dados via FastAPI -->
+    <div class="stats-bar" id="estatisticas">
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-icon-wrap"><i class="fa-solid fa-shield-cat"></i></div>
+                <div>
+                    <div class="stat-number" id="statPetsResgatados">...</div>
+                    <div class="stat-label">Pets Resgatados</div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon-wrap"><i class="fa-solid fa-house-chimney-heart"></i></div>
+                <div>
+                    <div class="stat-number" id="statAdocoesConcluidas">...</div>
+                    <div class="stat-label">Adoções Concluídas</div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon-wrap"><i class="fa-solid fa-hand-holding-heart"></i></div>
+                <div>
+                    <div class="stat-number" id="statPadrinhosAtivos">...</div>
+                    <div class="stat-label">Padrinhos Ativos</div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon-wrap"><i class="fa-solid fa-award"></i></div>
+                <div>
+                    <div class="stat-number" id="statOngsVerificadas">...</div>
+                    <div class="stat-label">ONGs Verificadas</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Carrossel de Pets em Destaque -->
+        <div class="section-title" id="pets-carrossel">
+            <h2>🐾 Pets Esperando Por Você</h2>
+            <p>Conheça alguns dos nossos anjinhos disponíveis para adoção imediata ou apadrinhamento.</p>
+        </div>
+
+        <div class="carousel-wrapper">
+            <button class="carousel-nav-btn carousel-prev" onclick="scrollCarousel(-1)">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <div class="carousel-pets" id="petsCarousel">
+                <!-- Conteúdo dinâmico renderizado via API/Banco de Dados -->
+            </div>
+            <button class="carousel-nav-btn carousel-next" onclick="scrollCarousel(1)">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 70px;">
+            <a href="login.html" class="btn btn-outline-primary" style="padding: 12px 28px; font-weight: 700;">
+                <i class="fa-solid fa-magnifying-glass"></i> Faça Login para Explorar o Catálogo Completo
+            </a>
+        </div>
+
+        <!-- Como Funciona Detalhado -->
+        <div class="section-title" id="como-funciona">
+            <h2>Como o AdotaPet Funciona?</h2>
+            <p>Um ecossistema transparente e seguro estruturado em 4 passos simples para o bem-estar animal.</p>
+        </div>
+
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Cadastro de ONGs e Pets</h3>
+                <p>Instituições de proteção animal verificadas cadastram pets resgatados, atualizam prontuários médicos e definem o histórico de saúde completo.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>Busca e Intenção</h3>
+                <p>O adotante explora o catálogo, analisa prontuários e submete um formulário formal de intenção de adoção ou opção de apadrinhamento.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Entrevista e Aprovação</h3>
+                <p>A ONG responsável avalia as condições habitacionais e de histórico do adotante, realizando entrevistas e aprovando o processo.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h3>Acompanhamento</h3>
+                <p>O pet encontra seu novo lar e a plataforma mantém o histórico de doações, visitas e relatórios do processo de apadrinhamento.</p>
+            </div>
+        </div>
+
+        <!-- Sobre o Projeto -->
+        <section class="about-section" id="sobre-projeto">
+            <div class="about-container">
+                <div class="about-text">
+                    <span class="badge badge-info" style="margin-bottom: 10px;">Iniciativa Tecnológica & Social</span>
+                    <h2>Sobre o Projeto AdotaPet</h2>
+                    <p>Muitas instituições de proteção animal enfrentam desafios operacionais significativos por utilizarem processos manuais ou planilhas descentralizadas. Isso gera perda de histórico de saúde dos animais e falhas no acompanhamento do processo de adoção.</p>
+                    <p>O <strong>AdotaPet</strong> foi desenvolvido para solucionar essa lacuna, atuando como um ecossistema centralizado que une transparência clínica, gestão eficiente para ONGs e facilidade de acesso para novos tutores e padrinhos.</p>
+                </div>
+                <div class="about-highlights">
+                    <div class="about-card">
+                        <i class="fa-solid fa-notes-medical"></i>
+                        <div>
+                            <h4>Prontuário Auditado</h4>
+                            <p>Histórico completo de vacinas, cirurgias e procedimentos de saúde.</p>
+                        </div>
+                    </div>
+                    <div class="about-card">
+                        <i class="fa-solid fa-hand-holding-heart"></i>
+                        <div>
+                            <h4>Apadrinhamento Direto</h4>
+                            <p>Apoio recorrente para custos de alimentação e tratamento.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seleção de Perfil Rápida -->
+        <div class="profiles-cta">
+            <div class="profile-card-callout">
+                <div>
+                    <span class="badge badge-info" style="margin-bottom: 12px;">Para Amigos dos Animais</span>
+                    <h3><i class="fa-solid fa-user-heart"></i> Quero Adotar ou Apadrinhar</h3>
+                    <p>Acesse o catálogo com dezenas de pets resgatados, faça solicitações formais de adoção e gerencie seus apadrinhamentos em um painel exclusivo.</p>
+                </div>
+                <div>
+                    <a href="login.html" class="btn btn-orange"><i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar para Adotar</a>
+                </div>
+            </div>
+
+            <div class="profile-card-callout">
+                <div>
+                    <span class="badge badge-warning" style="margin-bottom: 12px; color: #B45309; background: #FEF3C7;">Para ONGs e Protetores</span>
+                    <h3><i class="fa-solid fa-building-ngo"></i> Sou uma ONG / Instituição</h3>
+                    <p>Centralize o cadastro de animais, prontuários veterinários, pedidos de adoção e doações com o Selo de Verificação da plataforma.</p>
+                </div>
+                <div>
+                    <a href="login.html" class="btn btn-primary"><i class="fa-solid fa-arrow-right-to-bracket"></i> Acessar Painel da ONG</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Profissional -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <a href="index.html" class="logo" style="color: white; font-size: 1.4rem;">
+                    <i class="fa-solid fa-paw paw-logo"></i> Adota<strong>Pet</strong>
+                </a>
+                <p style="margin-top: 12px; font-size: 0.88rem; color: #94A3B8; line-height: 1.5;">
+                    Plataforma web centralizada para automação do ciclo de adoção responsável e apadrinhamento de animais resgatados.
+                </p>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Navegação</h4>
+                <ul class="footer-links">
+                    <li><a href="#pets-carrossel">Ver Pets</a></li>
+                    <li><a href="#como-funciona">Como Funciona</a></li>
+                    <li><a href="#sobre-projeto">Sobre o Projeto</a></li>
+                    <li><a href="login.html">Entrar / Cadastrar</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Universidade Federal de Goiás</h4>
+                <p style="font-size: 0.85rem; color: #CBD5E1; margin-bottom: 6px;">
+                    Engenharia de Software (Bacharelado)
+                </p>
+            </div>
+
+            <div class="footer-col">
+                <div style="font-size: 0.78rem; color: #94A3B8; line-height: 1.4;">
+                    <h4>Desenvolvedores</h4><br>
+                    Ian Carlos Lima Tavares<br>
+                    Joel Antônio Rezende Espíndola<br>
+                    Brenno Soares de Aguiar<br>
+                    Davi Alves Mugayar
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 AdotaPet. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Script de Integração do Frontend com o FastAPI -->
+    <script>
+        const API_URL = 'http://127.0.0.1:8000/api';
+
+        async function fetchEstatisticasBD() {
+            try {
+                const response = await fetch(`${API_URL}/estatisticas`);
+                if (!response.ok) throw new Error('Falha ao comunicar com a API');
+                
+                const data = await response.json();
+
+                document.getElementById('statPetsResgatados').innerText = data.totalResgatados;
+                document.getElementById('statAdocoesConcluidas').innerText = data.adocoesConcluidas;
+                document.getElementById('statPadrinhosAtivos').innerText = data.padrinhosAtivos;
+                document.getElementById('statOngsVerificadas').innerText = data.ongsVerificadas;
+            } catch (error) {
+                console.error("Erro ao carregar estatísticas do banco de dados:", error);
+            }
+        }
+
+        async function fetchPetsDestaqueBD() {
+            try {
+                const response = await fetch(`${API_URL}/pets/destaque`);
+                if (!response.ok) throw new Error('Falha ao comunicar com a API');
+
+                const pets = await response.json();
+                renderCarousel(pets);
+            } catch (error) {
+                console.error("Erro ao carregar carrossel do banco de dados:", error);
+            }
+        }
+
+        function renderCarousel(pets) {
+            const container = document.getElementById('petsCarousel');
+            container.innerHTML = '';
+
+            if (!pets || pets.length === 0) {
+                container.innerHTML = '<p style="padding: 20px; color: var(--text-muted);">Nenhum pet disponível no momento.</p>';
+                return;
+            }
+
+            pets.forEach(pet => {
+                const card = document.createElement('div');
+                card.className = 'carousel-card';
+                card.innerHTML = `
+                    <img src="${pet.foto}" alt="${pet.nome}">
+                    <div class="carousel-card-body">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <h3 style="font-size: 1.15rem; color: var(--dark-blue); font-weight: 700;">${pet.nome}</h3>
+                            <span class="badge ${pet.status === 'Disponível' ? 'badge-disponivel' : 'badge-tratamento'}">${pet.status}</span>
+                        </div>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
+                            <i class="fa-solid fa-paw"></i> ${pet.raca} • ${pet.porte} • ${pet.idade}
+                        </p>
+                        <p style="font-size: 0.8rem; color: #0066CC; font-weight: 600; margin-bottom: 14px;">
+                            <i class="fa-solid fa-building-ngo"></i> ${pet.ong}
+                        </p>
+                        <div style="margin-top: auto; display: flex; gap: 8px;">
+                            <a href="login.html" class="btn btn-outline-primary btn-sm" style="flex: 1;">
+                                <i class="fa-solid fa-eye"></i> Detalhes
+                            </a>
+                            <a href="login.html" class="btn btn-orange btn-sm" title="Adotar">
+                                <i class="fa-solid fa-heart"></i>
+                            </a>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function scrollCarousel(direction) {
+            const container = document.getElementById('petsCarousel');
+            const scrollAmount = 300 * direction;
+            container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchEstatisticasBD();
+            fetchPetsDestaqueBD();
+        });
+    </script>
+</body>
+</html>
