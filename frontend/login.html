@@ -101,6 +101,16 @@
     </div>
 
     <script>
+        const API_URL = 'http://127.0.0.1:8000/api';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const perfilParam = urlParams.get('perfil');
+            if (perfilParam) {
+                selectProfile(perfilParam);
+            }
+        });
+
         function selectProfile(profileType) {
             const btnAdotante = document.getElementById('btn-adotante');
             const btnInstituicao = document.getElementById('btn-instituicao');
@@ -140,31 +150,61 @@
             }
         }
 
-        function handleLogin(event) {
+        async function handleLogin(event) {
             event.preventDefault();
 
             const email = document.getElementById('email').value.trim();
             const senha = document.getElementById('senha').value;
             const tipoUsuario = document.getElementById('tipo_usuario').value;
+            const submitBtn = document.getElementById('submitBtn');
 
             if (!email || !senha) {
                 alert('Por favor, preencha todos os campos.');
                 return;
             }
 
-            const userSession = {
-                email: email,
-                tipo_usuario: tipoUsuario,
-                isLoggedIn: true,
-                loginTime: new Date().toISOString()
-            };
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.7';
 
-            localStorage.setItem('adotapet_session', JSON.stringify(userSession));
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        senha: senha,
+                        tipo_usuario: tipoUsuario
+                    })
+                });
 
-            if (tipoUsuario === 'Adotante') {
-                alert('🚀 Login efetuado com sucesso!\nRedirecionando para o Portal do Adotante...');
-            } else {
-                alert('🏢 Login efetuado com sucesso!\nRedirecionando para o Painel Administrativo da ONG...');
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Erro ao realizar login.');
+                }
+
+                const userSession = {
+                    id_usuario: data.usuario.id_usuario,
+                    email: data.usuario.email,
+                    nome: data.usuario.nome,
+                    tipo_usuario: data.usuario.tipo_usuario,
+                    isLoggedIn: true,
+                    loginTime: new Date().toISOString()
+                };
+
+                localStorage.setItem('adotapet_session', JSON.stringify(userSession));
+
+                alert(`🚀 ${data.mensagem}\nBem-vindo(a), ${data.usuario.nome}!`);
+                
+                window.location.href = data.redirect;
+
+            } catch (error) {
+                alert(`❌ ${error.message}`);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
             }
         }
 

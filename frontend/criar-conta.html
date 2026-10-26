@@ -195,9 +195,9 @@
                             <i class="fa-solid fa-arrow-left"></i> Voltar
                         </button>
                         
-                        <a href="login.html" class="btn-btn btn-success" style="text-decoration: none;">
+                        <button type="submit" class="btn-btn btn-success" id="submitRegisterBtn">
                             <i class="fa-solid fa-check"></i> Finalizar Cadastro
-                        </a>
+                        </button>
                     </div>
                 </div>
             </form>
@@ -209,6 +209,7 @@
     </div>
 
     <script>
+        const API_URL = 'http://127.0.0.1:8000/api';
         let currentStep = 1;
 
         function toggleProfileType(type) {
@@ -306,10 +307,42 @@
             }
         }
 
-        function handleRegister(event) {
+        async function handleRegister(event) {
             event.preventDefault();
 
+            const submitBtn = document.getElementById('submitRegisterBtn');
             const tipoUsuario = document.querySelector('input[name="tipo_usuario"]:checked').value;
+            
+            const email = document.getElementById('email').value.trim();
+            const senha = document.getElementById('senha').value;
+            
+            const cep = document.getElementById('cep').value.trim();
+            const rua = document.getElementById('rua').value.trim();
+            const numero = document.getElementById('numero').value.trim();
+            const complemento = document.getElementById('complemento').value.trim();
+            const bairro = document.getElementById('bairro').value.trim();
+            const cidade = document.getElementById('cidade').value.trim();
+            const estado = document.getElementById('estado').value.trim();
+
+            const phoneInputs = document.querySelectorAll('input[name="telefones[]"]');
+            const telefones = [];
+            phoneInputs.forEach(input => {
+                if (input.value.trim() !== '') telefones.push(input.value.trim());
+            });
+
+            const payload = {
+                email,
+                senha,
+                tipo_usuario: tipoUsuario,
+                cep,
+                rua,
+                numero,
+                complemento,
+                bairro,
+                cidade,
+                estado,
+                telefones
+            };
 
             if (tipoUsuario === 'Adotante') {
                 const nome = document.getElementById('nome').value.trim();
@@ -318,6 +351,10 @@
                     alert('Por favor, preencha o Nome Completo e CPF.');
                     return;
                 }
+                payload.nome = nome;
+                payload.cpf = cpf;
+                payload.tipo_residencia = document.getElementById('tipo_residencia').value;
+                payload.historico_pets = document.getElementById('historico_pets').value.trim();
             } else {
                 const razaoSocial = document.getElementById('razao_social').value.trim();
                 const cnpj = document.getElementById('cnpj').value.trim();
@@ -325,10 +362,37 @@
                     alert('Por favor, preencha a Razão Social e CNPJ da Instituição.');
                     return;
                 }
+                payload.razao_social = razaoSocial;
+                payload.cnpj = cnpj;
             }
 
-            alert('🎉 Cadastro realizado com sucesso! Redirecionando para a página de login...');
-            window.location.href = 'login.html';
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.7';
+
+            try {
+                const response = await fetch(`${API_URL}/registrar`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Erro ao realizar o cadastro.');
+                }
+
+                alert('🎉 Cadastro realizado com sucesso! Redirecionando para a página de login...');
+                window.location.href = `login.html?perfil=${tipoUsuario}`;
+
+            } catch (error) {
+                alert(`❌ ${error.message}`);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+            }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
