@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdotaPet — Registrar Novo Pet</title>
+    <link rel="stylesheet" href="static/ong-portal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-paw paw-logo"></i>
+                <span>Adota<strong>Pet</strong> <span class="badge-ong">Painel da ONG</span></span>
+            </a>
+            <div class="user-menu">
+                <span class="user-name" id="ongNavName">Instituição</span>
+                <a href="login.html" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="admin-sidebar-title">Navegação</div>
+            <a href="dashboard-instituicao.html" class="sidebar-nav-item"><i class="fa-solid fa-chart-pie"></i> Visão Geral</a>
+            <a href="gestao-pets.html" class="sidebar-nav-item active"><i class="fa-solid fa-paw"></i> Gerenciar Pets</a>
+            <a href="acompanhamento-adocoes.html" class="sidebar-nav-item"><i class="fa-solid fa-clipboard-check"></i> Processos de Adoção</a>
+            <a href="gestao-apadrinhamentos.html" class="sidebar-nav-item"><i class="fa-solid fa-hand-holding-dollar"></i> Apadrinhamentos</a>
+            <div class="admin-sidebar-title" style="margin-top: 16px;">Configurações</div>
+            <a href="perfil-instituicao.html" class="sidebar-nav-item"><i class="fa-solid fa-building-ngo"></i> Dados da Instituição</a>
+        </aside>
+
+        <main class="admin-main">
+            <div class="admin-page-header">
+                <div>
+                    <h1>Cadastrar Novo Pet Resgatado</h1>
+                    <p style="color: var(--text-muted);">Preencha o formulário para disponibilizar o pet para adoção ou apadrinhamento.</p>
+                </div>
+            </div>
+
+            <div class="card" style="max-width: 800px;">
+                <form id="cadastrarPetForm" onsubmit="handleCadastrarPet(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nome">Nome do Animal *</label>
+                            <input type="text" id="nome" placeholder="Ex: Thor, Bob" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="especie">Espécie *</label>
+                            <select id="especie" required>
+                                <option value="Cão">Cão</option>
+                                <option value="Gato">Gato</option>
+                                <option value="Coelho">Coelho</option>
+                                <option value="Ave">Ave</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="raca">Raça</label>
+                            <input type="text" id="raca" placeholder="Ex: Sem Raça Definida (SRD)">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="idade">Idade estimada (anos)</label>
+                            <input type="number" id="idade" min="0" max="30" placeholder="Ex: 2">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="porte">Porte</label>
+                            <select id="porte">
+                                <option value="Pequeno">Pequeno</option>
+                                <option value="Médio" selected>Médio</option>
+                                <option value="Grande">Grande</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sexo">Sexo</label>
+                            <select id="sexo">
+                                <option value="Macho">Macho</option>
+                                <option value="Fêmea">Fêmea</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full">
+                            <label for="status">Status Inicial *</label>
+                            <select id="status" required>
+                                <option value="Disponível">Disponível para Adoção</option>
+                                <option value="Disponível">Disponível para Apadrinhamento</option>
+                                <option value="Disponível">Adotado</option>
+                                <option value="Em tratamento">Em tratamento clínico</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full">
+                            <label for="observacao">Histórico e Observações de Saúde</label>
+                            <textarea id="observacao" rows="4" placeholder="Conte brevemente sobre as condições de resgate do pet..."></textarea>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+                        <a href="gestao-pets.html" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary" id="btnSubmit"><i class="fa-solid fa-check"></i> Cadastrar Animal</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:8000/api';
+        let session = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            session = JSON.parse(localStorage.getItem('adotapet_session'));
+            if (!session || !session.id_usuario) {
+                window.location.href = 'login.html';
+                return;
+            }
+            document.getElementById('ongNavName').textContent = session.nome || 'Instituição';
+        });
+
+        async function handleCadastrarPet(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSubmit');
+            btn.disabled = true;
+
+            const payload = {
+                nome: document.getElementById('nome').value.trim(),
+                especie: document.getElementById('especie').value,
+                raca: document.getElementById('raca').value.trim() || 'SRD',
+                idade: parseInt(document.getElementById('idade').value) || 0,
+                porte: document.getElementById('porte').value,
+                sexo: document.getElementById('sexo').value,
+                status: document.getElementById('status').value,
+                observacao: document.getElementById('observacao').value.trim(),
+                id_instituicao: session.id_usuario
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/instituicao/pets`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!res.ok) throw new Error('Erro ao cadastrar');
+                alert('🎉 Pet cadastrado com sucesso!');
+                window.location.href = 'gestao-pets.html';
+            } catch (err) {
+                alert('❌ Ocorreu um erro ao registrar o pet.');
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

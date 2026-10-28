@@ -38,3 +38,43 @@ class ApadrinhamentoSchema(BaseModel):
     tipo_de_contribuicao: str
     valor_recorrente: float
     frequencia: str
+
+class PetSchema(BaseModel):
+    nome: str
+    especie: str
+    raca: Optional[str] = None
+    idade: Optional[int] = None
+    porte: Optional[str] = None
+    sexo: Optional[str] = None
+    status: str
+    observacao: Optional[str] = None
+    id_instituicao: int
+
+class StatusAdocaoSchema(BaseModel):
+    id_adotante: int
+    id_animal: int
+    status: str
+    observacao: Optional[str] = None
+
+class StatusApadrinhamentoSchema(BaseModel):
+    id_adotante: int
+    id_animal: int
+    status: str
+
+class ProntuarioSchema(BaseModel):
+    id_animal: int
+    tipo_procedimento: str
+    descricao: Optional[str] = None
+
+class InstituicaoUpdateSchema(BaseModel):
+    razao_social: str
+    cnpj: str
+    email: EmailStr
+    rua: Optional[str] = None
+    numero: Optional[str] = None
+    bairro: Optional[str] = None
+    cidade: Optional[str] = None
+    estado: Optional[str] = None
+    cep: Optional[str] = None
+    complemento: Optional[str] = None
+    telefones: List[str] = []

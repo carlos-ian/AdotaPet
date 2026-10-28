@@ -21,7 +21,7 @@
             
             <nav class="nav-menu">
                 <a href="dashboard-adotante.html" class="nav-link"><i class="fa-solid fa-arrow-left"></i> Catálogo</a>
-                <a href="gestao-apadrinhamentos.html" class="nav-link"><i class="fa-solid fa-hand-holding-dollar"></i> Meus Apadrinhamentos</a>
+                <a href="lista-apadrinhamentos.html" class="nav-link"><i class="fa-solid fa-hand-holding-dollar"></i> Meus Apadrinhamentos</a>
             </nav>
 
             <div class="user-menu">
@@ -211,7 +211,7 @@
                 if (res.ok) {
                     const petNome = petAtual ? petAtual.nome : 'o pet';
                     alert(`🎉 Parabéns! Você agora é o padrinho oficial de ${petNome}!\n\nSeu apoio foi registrado no banco de dados com sucesso.`);
-                    window.location.href = 'gestao-apadrinhamentos.html';
+                    window.location.href = 'lista-apadrinhamentos.html';
                 } else {
                     const err = await res.json();
                     alert(`Erro ao registrar apadrinhamento: ${err.detail || 'Não foi possível concluir o registro.'}`);

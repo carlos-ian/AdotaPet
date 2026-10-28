@@ -71,7 +71,6 @@
     margin-bottom: 10px;
 }
 
-/* Stats Section */
 .stats-bar {
     max-width: 1100px;
     margin: -40px auto 40px;
@@ -124,7 +123,6 @@
     color: var(--text-muted);
 }
 
-/* Carrossel Pets */
 .section-title {
     text-align: center;
     margin-bottom: 30px;
@@ -226,7 +224,6 @@
 .carousel-prev { left: -15px; }
 .carousel-next { right: -15px; }
 
-/* Steps Section (Como Funciona) */
 .steps-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -268,7 +265,6 @@
     line-height: 1.5;
 }
 
-/* About Section */
 .about-section {
     background: #F8FAFC;
     border-radius: var(--radius-lg);
@@ -332,7 +328,6 @@
     margin: 0;
 }
 
-/* Profiles CTA Banner */
 .profiles-cta {
     background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
     color: white;
@@ -369,60 +364,113 @@
     line-height: 1.5;
 }
 
-/* Footer Profissional */
 .footer {
-    background: #0F172A;
-    color: white;
-    padding: 60px 20px 20px;
+    background-color: #0f172a;
+    color: #94a3b8;
+    padding: 40px 0 20px 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    border-top: 1px solid #1e293b;
 }
 
 .footer-container {
-    max-width: 1200px;
+    max-width: 1100px;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1.2fr 0.8fr 1fr 1.2fr;
-    gap: 30px;
-    margin-bottom: 40px;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 32px;
 }
 
-.footer-col h4 {
-    font-size: 1rem;
-    margin-bottom: 16px;
-    color: #F8FAFC;
-    border-bottom: 2px solid var(--primary-blue);
-    padding-bottom: 6px;
-    display: inline-block;
+.footer-brand {
+    max-width: 320px;
 }
 
-.footer-links {
-    list-style: none;
-    padding: 0;
+.footer-logo {
+    color: #ffffff;
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.footer-logo i {
+    color: #3b82f6;
+}
+
+.footer-brand p {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: #64748b;
     margin: 0;
 }
 
-.footer-links li {
-    margin-bottom: 10px;
+.footer-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.footer-links a {
-    color: #94A3B8;
+.footer-nav a {
+    color: #cbd5e1;
     text-decoration: none;
-    font-size: 0.9rem;
-    transition: color 0.2s;
+    font-size: 0.88rem;
+    transition: color 0.2s ease;
 }
 
-.footer-links a:hover {
-    color: #FFB366;
+.footer-nav a:hover {
+    color: #3b82f6;
+}
+
+.footer-credits {
+    text-align: right;
+}
+
+.ufg-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #3b82f6;
+    background: rgba(59, 130, 246, 0.1);
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+}
+
+.devs-list {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin: 0;
 }
 
 .footer-bottom {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 1100px;
+    margin: 30px auto 0 auto;
+    padding: 16px 24px 0 24px;
+    border-top: 1px solid #1e293b;
     text-align: center;
-    font-size: 0.82rem;
-    color: #64748B;
+    font-size: 0.78rem;
+    color: #475569;
+}
+
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-credits {
+        text-align: center;
+    }
+
+    .footer-nav {
+        flex-direction: row;
+        gap: 16px;
+    }
 }
 
 @media (max-width: 900px) {

@@ -12,7 +12,6 @@
 </head>
 <body>
 
-    <!-- Header Navbar -->
     <header class="navbar">
         <div class="nav-container">
             <a href="index.html" class="logo">
@@ -37,7 +36,6 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
     <section class="hero-section">
         <div class="hero-container">
             <div class="hero-content">
@@ -61,7 +59,6 @@
         </div>
     </section>
 
-    <!-- Estatísticas vindas do Banco de Dados via FastAPI -->
     <div class="stats-bar" id="estatisticas">
         <div class="stats-container">
             <div class="stat-item">
@@ -96,7 +93,6 @@
     </div>
 
     <div class="container">
-        <!-- Carrossel de Pets em Destaque -->
         <div class="section-title" id="pets-carrossel">
             <h2>🐾 Pets Esperando Por Você</h2>
             <p>Conheça alguns dos nossos anjinhos disponíveis para adoção imediata ou apadrinhamento.</p>
@@ -120,7 +116,6 @@
             </a>
         </div>
 
-        <!-- Como Funciona Detalhado -->
         <div class="section-title" id="como-funciona">
             <h2>Como o AdotaPet Funciona?</h2>
             <p>Um ecossistema transparente e seguro estruturado em 4 passos simples para o bem-estar animal.</p>
@@ -149,7 +144,6 @@
             </div>
         </div>
 
-        <!-- Sobre o Projeto -->
         <section class="about-section" id="sobre-projeto">
             <div class="about-container">
                 <div class="about-text">
@@ -177,7 +171,6 @@
             </div>
         </section>
 
-        <!-- Seleção de Perfil Rápida -->
         <div class="profiles-cta">
             <div class="profile-card-callout">
                 <div>
@@ -203,43 +196,26 @@
         </div>
     </div>
 
-    <!-- Footer Profissional -->
     <footer class="footer">
         <div class="footer-container">
-            <div class="footer-col">
-                <a href="index.html" class="logo" style="color: white; font-size: 1.4rem;">
-                    <i class="fa-solid fa-paw paw-logo"></i> Adota<strong>Pet</strong>
+            <!-- Brand & Sobre -->
+            <div class="footer-brand">
+                <a href="index.html" class="footer-logo">
+                    <i class="fa-solid fa-paw"></i> Adota<strong>Pet</strong>
                 </a>
-                <p style="margin-top: 12px; font-size: 0.88rem; color: #94A3B8; line-height: 1.5;">
-                    Plataforma web centralizada para automação do ciclo de adoção responsável e apadrinhamento de animais resgatados.
-                </p>
-            </div>
-            
-            <div class="footer-col">
-                <h4>Navegação</h4>
-                <ul class="footer-links">
-                    <li><a href="#pets-carrossel">Ver Pets</a></li>
-                    <li><a href="#como-funciona">Como Funciona</a></li>
-                    <li><a href="#sobre-projeto">Sobre o Projeto</a></li>
-                    <li><a href="login.html">Entrar / Cadastrar</a></li>
-                </ul>
+                <p>Plataforma para automação do ciclo de adoção e apadrinhamento animal.</p>
             </div>
 
-            <div class="footer-col">
-                <h4>Universidade Federal de Goiás</h4>
-                <p style="font-size: 0.85rem; color: #CBD5E1; margin-bottom: 6px;">
-                    Engenharia de Software (Bacharelado)
-                </p>
+            <div class="footer-nav">
+                <a href="#pets-carrossel">Ver Pets</a>
+                <a href="#como-funciona">Como Funciona</a>
+                <a href="#sobre-projeto">Sobre</a>
+                <a href="login.html">Entrar</a>
             </div>
 
-            <div class="footer-col">
-                <div style="font-size: 0.78rem; color: #94A3B8; line-height: 1.4;">
-                    <h4>Desenvolvedores</h4><br>
-                    Ian Carlos Lima Tavares<br>
-                    Joel Antônio Rezende Espíndola<br>
-                    Brenno Soares de Aguiar<br>
-                    Davi Alves Mugayar
-                </div>
+            <div class="footer-credits">
+                <span class="ufg-badge">UFG • Engenharia de Software</span>
+                <p class="devs-list">Davi Alves • Brenno Soares • Ian Carlos • Joel Antônio</p>
             </div>
         </div>
 
@@ -248,7 +224,6 @@
         </div>
     </footer>
 
-    <!-- Script de Integração do Frontend com o FastAPI -->
     <script>
         const API_URL = 'http://127.0.0.1:8000/api';
 

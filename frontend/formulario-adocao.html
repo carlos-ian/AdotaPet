@@ -21,7 +21,7 @@
             
             <nav class="nav-menu">
                 <a href="dashboard-adotante.html" class="nav-link"><i class="fa-solid fa-arrow-left"></i> Voltar ao Catálogo</a>
-                <a href="acompanhamento-adocoes.html" class="nav-link"><i class="fa-solid fa-heart"></i> Minhas Adoções</a>
+                <a href="lista-adocoes.html" class="nav-link"><i class="fa-solid fa-heart"></i> Minhas Adoções</a>
             </nav>
 
             <div class="user-menu">
@@ -241,7 +241,7 @@
 
                 if (res.ok) {
                     alert('✅ Solicitação de Adoção submetida e registrada no banco de dados com sucesso!\n\nA instituição foi notificada e avaliará seu pedido.');
-                    window.location.href = 'acompanhamento-adocoes.html';
+                    window.location.href = 'lista-adocoes.html';
                 } else {
                     const erro = await res.json();
                     alert(`Erro ao submeter: ${erro.detail || 'Não foi possível registrar a solicitação.'}`);

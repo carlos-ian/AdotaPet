@@ -3,125 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AdotaPet — Gestão e Cadastro de Pets</title>
+    <title>AdotaPet — Gerenciamento de Pets</title>
     <link rel="stylesheet" href="static/ong-portal.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body class="theme-ong">
+<body>
 
-    <!-- Navbar Superior -->
     <header class="navbar">
         <div class="nav-container">
             <a href="index.html" class="logo">
                 <i class="fa-solid fa-paw paw-logo"></i>
-                <span>Adota<strong>Pet</strong> <span style="font-size: 0.8rem; background: #FFF4EC; color: var(--primary-orange); padding: 2px 8px; border-radius: 6px; margin-left: 6px;">ONG Admin</span></span>
+                <span>Adota<strong>Pet</strong> <span class="badge-ong">Painel da ONG</span></span>
             </a>
-            
-            <nav class="nav-menu">
-                <a href="dashboard-adotante.html" target="_blank" class="nav-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Catálogo Público</a>
-            </nav>
-
             <div class="user-menu">
-                <div class="user-info">
-                    <span class="user-name">Instituto Eu Sou o Bicho</span>
-                    <span class="user-role">Instituição Verificada <i class="fa-solid fa-circle-check" style="color: #2563EB;"></i></span>
-                </div>
-                <a href="login.html" class="btn-logout" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></a>
+                <span class="user-name" id="ongNavName">Instituição</span>
+                <a href="login.html" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i></a>
             </div>
         </div>
     </header>
 
     <div class="admin-layout">
-        <!-- Sidebar -->
         <aside class="admin-sidebar">
-            <div class="admin-sidebar-title">Painel Operacional</div>
-            <a href="dashboard-instituicao.html" class="sidebar-nav-item">
-                <i class="fa-solid fa-chart-pie"></i> Visão Geral
-            </a>
-            <a href="gestao-pets.html" class="sidebar-nav-item active">
-                <i class="fa-solid fa-paw"></i> Gerenciar Pets
-            </a>
-            <a href="acompanhamento-adocoes.html" class="sidebar-nav-item">
-                <i class="fa-solid fa-clipboard-check"></i> Processos de Adoção
-            </a>
-            <a href="gestao-apadrinhamentos.html" class="sidebar-nav-item">
-                <i class="fa-solid fa-hand-holding-dollar"></i> Apadrinhamentos
-            </a>
-            
+            <div class="admin-sidebar-title">Navegação</div>
+            <a href="dashboard-instituicao.html" class="sidebar-nav-item"><i class="fa-solid fa-chart-pie"></i> Visão Geral</a>
+            <a href="gestao-pets.html" class="sidebar-nav-item active"><i class="fa-solid fa-paw"></i> Gerenciar Pets</a>
+            <a href="acompanhamento-adocoes.html" class="sidebar-nav-item"><i class="fa-solid fa-clipboard-check"></i> Processos de Adoção</a>
+            <a href="gestao-apadrinhamentos.html" class="sidebar-nav-item"><i class="fa-solid fa-hand-holding-dollar"></i> Apadrinhamentos</a>
             <div class="admin-sidebar-title" style="margin-top: 16px;">Configurações</div>
-            <a href="prontuario-veterinario.html?id=1" class="sidebar-nav-item">
-                <i class="fa-solid fa-notes-medical"></i> Prontuário Clínico
-            </a>
-            <a href="perfil-instituicao.html" class="sidebar-nav-item">
-                <i class="fa-solid fa-building-ngo"></i> Dados da Instituição
-            </a>
+            <a href="perfil-instituicao.html" class="sidebar-nav-item"><i class="fa-solid fa-building-ngo"></i> Dados da Instituição</a>
         </aside>
 
-        <!-- Main Content -->
         <main class="admin-main">
             <div class="admin-page-header">
                 <div>
-                    <h1>Gestão do Acervo de Animais</h1>
-                    <p style="color: var(--text-muted); font-size: 0.95rem;">Controle de animais resgatados sob custódia da ONG (Tabela Animal).</p>
+                    <h1>Gerenciamento de Pets</h1>
+                    <p style="color: var(--text-muted);">Visualize, edite dados e gerencie prontuários dos animais sob sua custódia.</p>
                 </div>
-                <div>
-                    <button class="btn btn-orange" onclick="abrirModalPet()">
-                        <i class="fa-solid fa-plus"></i> Cadastrar Novo Pet
-                    </button>
-                </div>
+                <a href="registrar-pet.html" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Novo Pet</a>
             </div>
 
-            <!-- Filtros e Busca -->
-            <div class="card" style="margin-bottom: 24px; padding: 16px 20px;">
-                <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 14px; align-items: center;">
-                    <div>
-                        <input type="text" id="filtroNome" class="form-control" placeholder="Buscar por nome ou raça..." oninput="filtrarPets()">
-                    </div>
-                    <div>
-                        <select id="filtroEspecie" class="form-control" onchange="filtrarPets()">
-                            <option value="">Todas as Espécies</option>
-                            <option value="Cão">Cão</option>
-                            <option value="Gato">Gato</option>
-                        </select>
-                    </div>
-                    <div>
-                        <select id="filtroStatus" class="form-control" onchange="filtrarPets()">
-                            <option value="">Todos os Status</option>
-                            <option value="Disponível">Disponível</option>
-                            <option value="Adotado">Adotado</option>
-                            <option value="Em tratamento">Em tratamento</option>
-                            <option value="Em processo de adoção">Em processo</option>
-                        </select>
-                    </div>
-                    <div>
-                        <button class="btn btn-secondary" style="width: 100%;" onclick="limparFiltros()">
-                            <i class="fa-solid fa-rotate-left"></i> Limpar
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tabela de Animais -->
             <div class="card">
                 <div class="table-responsive">
                     <table class="custom-table">
                         <thead>
                             <tr>
-                                <th>Animal</th>
+                                <th>Nome</th>
                                 <th>Espécie</th>
                                 <th>Raça</th>
                                 <th>Idade</th>
-                                <th>Porte</th>
-                                <th>Sexo</th>
-                                <th>Status Atual</th>
+                                <th>Status</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
-                        <tbody id="tabelaPetsBody">
-                            <!-- Gerado via JS -->
+                        <tbody id="petsTbody">
+                            <tr><td colspan="6" style="text-align: center;">Carregando animais...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -129,311 +65,295 @@
         </main>
     </div>
 
-    <!-- Modal de Cadastro / Edição de Pet -->
-    <div class="modal-overlay" id="modalPet">
-        <div class="modal-container" style="max-width: 720px;">
-            <div class="modal-header">
-                <h3 id="modalPetTitulo"><i class="fa-solid fa-paw" style="color: var(--primary-orange);"></i> Cadastrar Novo Pet</h3>
-                <button class="modal-close-btn" onclick="fecharModalPet()">&times;</button>
+    <div id="editModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="card-header">
+                <h3 style="color: var(--dark-blue);">Editar Dados do Pet</h3>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="closeEditModal()">X</button>
             </div>
-            <form id="formPet" onsubmit="salvarPet(event)">
-                <div class="modal-body">
-                    <input type="hidden" id="petEditId" value="">
-
-                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px;">
-                        <div class="form-group">
-                            <label for="petNomeInput">Nome do Pet *</label>
-                            <input type="text" id="petNomeInput" class="form-control" placeholder="Ex: Thor, Mel..." required>
-                        </div>
-                        <div class="form-group">
-                            <label for="petEspecieInput">Espécie *</label>
-                            <select id="petEspecieInput" class="form-control" required>
-                                <option value="Cão">Cão</option>
-                                <option value="Gato">Gato</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px;">
-                        <div class="form-group">
-                            <label for="petRacaInput">Raça</label>
-                            <input type="text" id="petRacaInput" class="form-control" placeholder="Ex: Vira-lata">
-                        </div>
-                        <div class="form-group">
-                            <label for="petIdadeInput">Idade (anos/meses)</label>
-                            <input type="number" id="petIdadeInput" class="form-control" placeholder="Ex: 2" min="0" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="petPorteInput">Porte</label>
-                            <select id="petPorteInput" class="form-control" required>
-                                <option value="Pequeno">Pequeno</option>
-                                <option value="Médio" selected>Médio</option>
-                                <option value="Grande">Grande</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="petSexoInput">Sexo</label>
-                            <select id="petSexoInput" class="form-control" required>
-                                <option value="M">Macho (M)</option>
-                                <option value="F">Fêmea (F)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                        <div class="form-group">
-                            <label for="petStatusInput">Status do Animal *</label>
-                            <select id="petStatusInput" class="form-control" required>
-                                <option value="Disponível">Disponível para Adoção</option>
-                                <option value="Em processo de adoção">Em processo de adoção</option>
-                                <option value="Em tratamento">Em tratamento clínico</option>
-                                <option value="Adotado">Adotado</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="petFotoUrl">URL da Foto Principal</label>
-                            <input type="url" id="petFotoUrl" class="form-control" placeholder="https://..." value="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=300">
-                        </div>
-                    </div>
-
+            <form id="editPetForm" onsubmit="salvarEdicaoPet(event)">
+                <input type="hidden" id="editIdAnimal">
+                <div class="form-grid">
                     <div class="form-group">
-                        <label for="petObservacaoInput">Observações / Comportamento (Tabela Animal)</label>
-                        <textarea id="petObservacaoInput" class="form-control" rows="3" placeholder="Temperamento, convivência com outros pets e crianças, etc."></textarea>
+                        <label>Nome *</label>
+                        <input type="text" id="editNome" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Espécie *</label>
+                        <select id="editEspecie" required>
+                            <option value="Cão">Cão</option>
+                            <option value="Gato">Gato</option>
+                            <option value="Coelho">Coelho</option>
+                            <option value="Ave">Ave</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Raça</label>
+                        <input type="text" id="editRaca">
+                    </div>
+                    <div class="form-group">
+                        <label>Idade (anos)</label>
+                        <input type="number" id="editIdade">
+                    </div>
+                    <div class="form-group">
+                        <label>Porte</label>
+                        <select id="editPorte">
+                            <option value="P">Pequeno</option>
+                            <option value="M">Médio</option>
+                            <option value="G">Grande</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Sexo</label>
+                        <select id="editSexo">
+                            <option value="M">Macho</option>
+                            <option value="F">Fêmea</option>
+                        </select>
+                    </div>
+                    <div class="form-group full">
+                        <label>Status *</label>
+                        <select id="editStatus" required>
+                            <option value="Disponível">Disponível</option>
+                            <option value="Em tratamento">Em tratamento</option>
+                            <option value="Adotado">Adotado</option>
+                            <option value="Indisponível">Indisponível</option>
+                            <option value="Adoção">Adoção</option>
+                            <option value="Ambos">Ambos</option>
+                        </select>
+                    </div>
+                    <div class="form-group full">
+                        <label>Observação</label>
+                        <textarea id="editObservacao" rows="2"></textarea>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="fecharModalPet()">Cancelar</button>
-                    <button type="submit" class="btn btn-orange">Salvar Animal</button>
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Script de Gestão de Pets -->
-    <script>
-        const petsIniciais = [
-            {
-                id: 1,
-                nome: "Thor",
-                especie: "Cão",
-                raca: "Vira-lata",
-                idade: 2,
-                porte: "Médio",
-                sexo: "M",
-                status: "Disponível",
-                observacao: "Muito dócil, brincalhão e sociável com crianças.",
-                foto: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=300"
-            },
-            {
-                id: 2,
-                nome: "Luna",
-                especie: "Gato",
-                raca: "Siamês",
-                idade: 1,
-                porte: "Pequeno",
-                sexo: "F",
-                status: "Disponível",
-                observacao: "Calma, carinhosa e habituada a apartamento.",
-                foto: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=300"
-            },
-            {
-                id: 3,
-                nome: "Bob",
-                especie: "Cão",
-                raca: "Golden Retriever",
-                idade: 3,
-                porte: "Grande",
-                sexo: "M",
-                status: "Em tratamento",
-                observacao: "Recuperando-se de procedimento ortopédico.",
-                foto: "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=300"
-            },
-            {
-                id: 4,
-                nome: "Mel",
-                especie: "Cão",
-                raca: "Poodle",
-                idade: 4,
-                porte: "Pequeno",
-                sexo: "F",
-                status: "Adotado",
-                observacao: "Adotada em 18/10/2026.",
-                foto: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=300"
-            }
-        ];
-
-        function getPets() {
-            let pets = JSON.parse(localStorage.getItem('adotapet_banco_pets'));
-            if (!pets || pets.length === 0) {
-                pets = petsIniciais;
-                localStorage.setItem('adotapet_banco_pets', JSON.stringify(pets));
-            }
-            return pets;
-        }
-
-        function salvarPets(pets) {
-            localStorage.setItem('adotapet_banco_pets', JSON.stringify(pets));
-        }
-
-        function renderizarTabela(pets) {
-            const tbody = document.getElementById('tabelaPetsBody');
-            tbody.innerHTML = '';
-
-            if (pets.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 30px;">Nenhum animal encontrado com os filtros selecionados.</td></tr>`;
-                return;
-            }
-
-            pets.forEach(p => {
-                let badgeClass = 'badge-disponivel';
-                if (p.status === 'Em tratamento') badgeClass = 'badge-tratamento';
-                if (p.status === 'Adotado') badgeClass = 'badge-adotado';
-                if (p.status === 'Em processo de adoção') badgeClass = 'badge-em-analise';
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <img src="${p.foto}" style="width: 44px; height: 44px; border-radius: 8px; object-fit: cover;">
-                            <div>
-                                <strong style="font-size: 0.95rem; color: var(--dark-blue);">${p.nome}</strong>
-                                <div style="font-size: 0.78rem; color: var(--text-muted);">#ID ${p.id}</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td>${p.especie}</td>
-                    <td>${p.raca || '—'}</td>
-                    <td>${p.idade} ano(s)</td>
-                    <td>${p.porte}</td>
-                    <td>${p.sexo === 'M' ? '<i class="fa-solid fa-mars" style="color:#0066CC"></i> Macho' : '<i class="fa-solid fa-venus" style="color:#E11D48"></i> Fêmea'}</td>
-                    <td><span class="badge ${badgeClass}">${p.status}</span></td>
-                    <td>
-                        <div style="display: flex; gap: 6px;">
-                            <a href="prontuario-veterinario.html?id=${p.id}" class="btn btn-secondary btn-sm" title="Prontuário Veterinário">
-                                <i class="fa-solid fa-notes-medical" style="color: var(--primary-blue);"></i>
-                            </a>
-                            <button onclick="editarPet(${p.id})" class="btn btn-secondary btn-sm" title="Editar Pet">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </button>
-                            <button onclick="alterarStatusRapido(${p.id})" class="btn btn-secondary btn-sm" title="Alterar Status">
-                                <i class="fa-solid fa-arrows-rotate"></i>
-                            </button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function filtrarPets() {
-            const query = document.getElementById('filtroNome').value.toLowerCase();
-            const especie = document.getElementById('filtroEspecie').value;
-            const status = document.getElementById('filtroStatus').value;
-
-            const pets = getPets();
-            const filtrados = pets.filter(p => {
-                const matchNome = p.nome.toLowerCase().includes(query) || (p.raca && p.raca.toLowerCase().includes(query));
-                const matchEspecie = !especie || p.especie === especie;
-                const matchStatus = !status || p.status === status;
-                return matchNome && matchEspecie && matchStatus;
-            });
-
-            renderizarTabela(filtrados);
-        }
-
-        function limparFiltros() {
-            document.getElementById('filtroNome').value = '';
-            document.getElementById('filtroEspecie').value = '';
-            document.getElementById('filtroStatus').value = '';
-            filtrarPets();
-        }
-
-        function abrirModalPet() {
-            document.getElementById('formPet').reset();
-            document.getElementById('petEditId').value = '';
-            document.getElementById('modalPetTitulo').innerHTML = `<i class="fa-solid fa-paw" style="color: var(--primary-orange);"></i> Cadastrar Novo Pet`;
-            document.getElementById('modalPet').classList.add('active');
-        }
-
-        function fecharModalPet() {
-            document.getElementById('modalPet').classList.remove('active');
-        }
-
-        function editarPet(id) {
-            const pets = getPets();
-            const pet = pets.find(p => p.id === id);
-            if (!pet) return;
-
-            document.getElementById('petEditId').value = pet.id;
-            document.getElementById('petNomeInput').value = pet.nome;
-            document.getElementById('petEspecieInput').value = pet.especie;
-            document.getElementById('petRacaInput').value = pet.raca;
-            document.getElementById('petIdadeInput').value = pet.idade;
-            document.getElementById('petPorteInput').value = pet.porte;
-            document.getElementById('petSexoInput').value = pet.sexo;
-            document.getElementById('petStatusInput').value = pet.status;
-            document.getElementById('petFotoUrl').value = pet.foto;
-            document.getElementById('petObservacaoInput').value = pet.observacao;
-
-            document.getElementById('modalPetTitulo').innerHTML = `<i class="fa-solid fa-pen-to-square" style="color: var(--primary-orange);"></i> Editar Informações de ${pet.nome}`;
-            document.getElementById('modalPet').classList.add('active');
-        }
-
-        function salvarPet(e) {
-            e.preventDefault();
-            const pets = getPets();
-            const editId = document.getElementById('petEditId').value;
-
-            const petData = {
-                id: editId ? parseInt(editId) : Date.now(),
-                nome: document.getElementById('petNomeInput').value,
-                especie: document.getElementById('petEspecieInput').value,
-                raca: document.getElementById('petRacaInput').value || 'Sem Raça Definida',
-                idade: parseInt(document.getElementById('petIdadeInput').value) || 1,
-                porte: document.getElementById('petPorteInput').value,
-                sexo: document.getElementById('petSexoInput').value,
-                status: document.getElementById('petStatusInput').value,
-                foto: document.getElementById('petFotoUrl').value || 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=300',
-                observacao: document.getElementById('petObservacaoInput').value
-            };
-
-            if (editId) {
-                const index = pets.findIndex(p => p.id === parseInt(editId));
-                if (index !== -1) pets[index] = petData;
-            } else {
-                pets.unshift(petData);
-            }
-
-            salvarPets(pets);
-            fecharModalPet();
-            filtrarPets();
-            alert(`✅ Dados do pet "${petData.nome}" salvos com sucesso!`);
-        }
-
-        function alterarStatusRapido(id) {
-            const pets = getPets();
-            const pet = pets.find(p => p.id === id);
-            if (!pet) return;
-
-            const novoStatus = prompt(`Alterar status de ${pet.nome} (Atual: ${pet.status}):\nDigite:\n1 - Disponível\n2 - Em tratamento\n3 - Em processo de adoção\n4 - Adotado`, "1");
+    <div id="prontuarioModal" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="card-header">
+                <h3 style="color: var(--dark-blue);" id="prontuarioTitle">Prontuário Veterinário</h3>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="closeProntuarioModal()">X</button>
+            </div>
             
-            if (novoStatus === "1") pet.status = "Disponível";
-            else if (novoStatus === "2") pet.status = "Em tratamento";
-            else if (novoStatus === "3") pet.status = "Em processo de adoção";
-            else if (novoStatus === "4") pet.status = "Adotado";
-            else return;
+            <div style="margin-bottom: 20px; background: var(--light-blue-bg); padding: 12px; border-radius: var(--radius-sm);">
+                <h4 style="font-size: 0.9rem; color: var(--dark-blue); margin-bottom: 8px;">Adicionar Novo Registro Clínico</h4>
+                <form id="addProntuarioForm" onsubmit="adicionarProcedimento(event)">
+                    <input type="hidden" id="prontuarioIdAnimal">
+                    <div class="form-grid">
+                        <div class="form-group full">
+                            <label>Tipo de Procedimento *</label>
+                            <input type="text" id="pTipo" placeholder="Ex: Vacina V10, Castração, Exame de Sangue" required>
+                        </div>
+                        <div class="form-group full">
+                            <label>Descrição detalhada</label>
+                            <textarea id="pDescricao" rows="2" placeholder="Observações veterinárias..."></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm" style="margin-top: 10px;">Adicionar Ficha</button>
+                </form>
+            </div>
 
-            salvarPets(pets);
-            filtrarPets();
-        }
+            <h4 style="font-size: 0.9rem; color: var(--dark-blue); margin-bottom: 10px;">Histórico Médico</h4>
+            <div id="prontuarioList" style="max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:8000/api';
+        let session = null;
+        let listaPetsLocal = [];
 
         document.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            if (params.get('acao') === 'novo') {
-                abrirModalPet();
+            session = JSON.parse(localStorage.getItem('adotapet_session'));
+            if (!session || !session.id_usuario) {
+                window.location.href = 'login.html';
+                return;
             }
-            filtrarPets();
+            document.getElementById('ongNavName').textContent = session.nome || 'Instituição';
+            carregarPets();
         });
+
+        async function carregarPets() {
+            try {
+                const res = await fetch(`${API_URL}/instituicoes/${session.id_usuario}`);
+                if (!res.ok) throw new Error('Erro ao carregar pets');
+                const data = await res.json();
+                listaPetsLocal = data.pets;
+
+                const tbody = document.getElementById('petsTbody');
+                tbody.innerHTML = '';
+
+                if (listaPetsLocal.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum pet cadastrado.</td></tr>';
+                    return;
+                }
+
+                listaPetsLocal.forEach(p => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><strong>${p.nome}</strong></td>
+                            <td>${p.especie}</td>
+                            <td>${p.raca || '-'}</td>
+                            <td>${p.idade}</td>
+                            <td><span class="badge badge-info">${p.status}</span></td>
+                            <td>
+                                <button class="btn btn-secondary btn-sm" onclick="openEditModal(${p.id_animal})"><i class="fa-solid fa-pen"></i> Editar</button>
+                                <button class="btn btn-primary btn-sm" onclick="openProntuarioModal(${p.id_animal}, '${p.nome}')"><i class="fa-solid fa-notes-medical"></i> Prontuário</button>
+                                <button class="btn btn-danger btn-sm" onclick="excluirPet(${p.id_animal})"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function openEditModal(idAnimal) {
+            const pet = listaPetsLocal.find(p => p.id_animal === idAnimal);
+            if (!pet) return;
+
+            document.getElementById('editIdAnimal').value = pet.id_animal;
+            document.getElementById('editNome').value = pet.nome;
+            document.getElementById('editEspecie').value = pet.especie;
+            document.getElementById('editRaca').value = pet.raca || '';
+            document.getElementById('editIdade').value = parseInt(pet.idade) || '';
+
+            const porteUpper = (pet.porte || 'M').toUpperCase();
+            document.getElementById('editPorte').value = porteUpper.startsWith('P') ? 'P' : (porteUpper.startsWith('G') ? 'G' : 'M');
+
+            const sexoUpper = (pet.sexo || 'M').toUpperCase();
+            document.getElementById('editSexo').value = sexoUpper.startsWith('F') ? 'F' : 'M';
+
+            document.getElementById('editStatus').value = pet.status || 'Disponível';
+            document.getElementById('editObservacao').value = pet.observacao || '';
+
+            document.getElementById('editModal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
+        }
+
+        async function salvarEdicaoPet(e) {
+            e.preventDefault();
+            const idAnimal = document.getElementById('editIdAnimal').value;
+            const payload = {
+                nome: document.getElementById('editNome').value,
+                especie: document.getElementById('editEspecie').value,
+                raca: document.getElementById('editRaca').value,
+                idade: parseInt(document.getElementById('editIdade').value) || 0,
+                porte: document.getElementById('editPorte').value,
+                sexo: document.getElementById('editSexo').value,
+                status: document.getElementById('editStatus').value,
+                observacao: document.getElementById('editObservacao').value,
+                id_instituicao: session.id_usuario
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/instituicao/pets/${idAnimal}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!res.ok) throw new Error('Erro ao salvar');
+                alert('Pet atualizado com sucesso!');
+                closeEditModal();
+                carregarPets();
+            } catch (err) {
+                alert('Erro ao atualizar dados do pet.');
+            }
+        }
+
+        async function excluirPet(idAnimal) {
+            if (!confirm('Deseja realmente excluir este pet do sistema?')) return;
+
+            try {
+                const res = await fetch(`${API_URL}/instituicao/pets/${idAnimal}?id_instituicao=${session.id_usuario}`, {
+                    method: 'DELETE'
+                });
+                if (!res.ok) throw new Error('Erro ao excluir');
+                alert('Pet removido com sucesso.');
+                carregarPets();
+            } catch (err) {
+                alert('Erro ao excluir pet.');
+            }
+        }
+
+        async function openProntuarioModal(idAnimal, nomePet) {
+            document.getElementById('prontuarioTitle').textContent = `Prontuário Veterinário — ${nomePet}`;
+            document.getElementById('prontuarioIdAnimal').value = idAnimal;
+            document.getElementById('prontuarioModal').classList.remove('hidden');
+            carregarProntuarioList(idAnimal);
+        }
+
+        function closeProntuarioModal() {
+            document.getElementById('prontuarioModal').classList.add('hidden');
+        }
+
+        async function carregarProntuarioList(idAnimal) {
+            const listDiv = document.getElementById('prontuarioList');
+            listDiv.innerHTML = 'Carregando ficha médica...';
+
+            try {
+                const res = await fetch(`${API_URL}/prontuario/${idAnimal}`);
+                if (!res.ok) throw new Error('Erro ao carregar prontuário');
+                const data = await res.json();
+
+                listDiv.innerHTML = '';
+                if (data.registros.length === 0) {
+                    listDiv.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">Nenhum histórico médico encontrado para este pet.</p>';
+                    return;
+                }
+
+                data.registros.forEach(r => {
+                    listDiv.innerHTML += `
+                        <div style="padding: 10px; background: var(--light-blue-bg); border-radius: var(--radius-sm); border-left: 3px solid var(--primary-blue);">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; color: var(--dark-blue);">
+                                <span>${r.tipo}</span>
+                                <span>${r.data}</span>
+                            </div>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">${r.descricao}</p>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                listDiv.innerHTML = 'Erro ao carregar prontuário.';
+            }
+        }
+
+        async function adicionarProcedimento(e) {
+            e.preventDefault();
+            const idAnimal = document.getElementById('prontuarioIdAnimal').value;
+            const payload = {
+                id_animal: parseInt(idAnimal),
+                tipo_procedimento: document.getElementById('pTipo').value,
+                descricao: document.getElementById('pDescricao').value
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/prontuario`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!res.ok) throw new Error('Erro ao adicionar');
+                
+                document.getElementById('pTipo').value = '';
+                document.getElementById('pDescricao').value = '';
+                carregarProntuarioList(idAnimal);
+            } catch (err) {
+                alert('Erro ao gravar ficha clínica.');
+            }
+        }
     </script>
 </body>
 </html>

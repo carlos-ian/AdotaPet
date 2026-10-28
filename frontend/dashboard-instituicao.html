@@ -6,130 +6,86 @@
     <title>AdotaPet — Dashboard da Instituição</title>
     <link rel="stylesheet" href="static/ong-portal.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body class="theme-ong">
+<body>
 
-    <!-- Navbar Superior -->
     <header class="navbar">
         <div class="nav-container">
             <a href="index.html" class="logo">
                 <i class="fa-solid fa-paw paw-logo"></i>
-                <span>Adota<strong>Pet</strong> <span style="font-size: 0.8rem; background: #FFF4EC; color: var(--primary-orange); padding: 2px 8px; border-radius: 6px; margin-left: 6px;">ONG Admin</span></span>
+                <span>Adota<strong>Pet</strong> <span class="badge-ong">Painel da ONG</span></span>
             </a>
-            
-            <nav class="nav-menu">
-                <a href="dashboard-adotante.html" target="_blank" class="nav-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Ver Catálogo Público</a>
-            </nav>
-
             <div class="user-menu">
                 <div class="user-info">
-                    <span class="user-name" id="ongNavName">Instituto Eu Sou o Bicho</span>
-                    <span class="user-role">Instituição Verificada <i class="fa-solid fa-circle-check" style="color: #2563EB;"></i></span>
+                    <span class="user-name" id="ongNavName">Instituição</span>
+                    <span class="user-role">Instituição Verificada <i class="fa-solid fa-circle-check" style="color: #60A5FA;"></i></span>
                 </div>
                 <a href="login.html" class="btn-logout" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></a>
             </div>
         </div>
     </header>
 
-    <!-- Layout com Menu Lateral -->
     <div class="admin-layout">
-        <!-- Sidebar -->
         <aside class="admin-sidebar">
-            <div class="admin-sidebar-title">Painel Operacional</div>
-            <a href="dashboard-instituicao.html" class="sidebar-nav-item active">
-                <i class="fa-solid fa-chart-pie"></i> Visão Geral
-            </a>
-            <a href="gestao-pets.html" class="sidebar-nav-item">
-                <i class="fa-solid fa-paw"></i> Gerenciar Pets
-            </a>
-            <a href="acompanhamento-adocoes.html" class="sidebar-nav-item">
-                <i class="fa-solid fa-clipboard-check"></i> Processos de Adoção
-            </a>
-            <a href="gestao-apadrinhamentos.html" class="sidebar-nav-item">
-                <i class="fa-solid fa-hand-holding-dollar"></i> Apadrinhamentos
-            </a>
-            
+            <div class="admin-sidebar-title">Navegação</div>
+            <a href="dashboard-instituicao.html" class="sidebar-nav-item active"><i class="fa-solid fa-chart-pie"></i> Visão Geral</a>
+            <a href="gestao-pets.html" class="sidebar-nav-item"><i class="fa-solid fa-paw"></i> Gerenciar Pets</a>
+            <a href="acompanhamento-adocoes.html" class="sidebar-nav-item"><i class="fa-solid fa-clipboard-check"></i> Processos de Adoção</a>
+            <a href="gestao-apadrinhamentos.html" class="sidebar-nav-item"><i class="fa-solid fa-hand-holding-dollar"></i> Apadrinhamentos</a>
             <div class="admin-sidebar-title" style="margin-top: 16px;">Configurações</div>
-            <a href="prontuario-veterinario.html?id=1" class="sidebar-nav-item">
-                <i class="fa-solid fa-notes-medical"></i> Prontuário Clínico
-            </a>
-            <a href="perfil-instituicao.html" class="sidebar-nav-item">
-                <i class="fa-solid fa-building-ngo"></i> Dados da Instituição
-            </a>
+            <a href="perfil-instituicao.html" class="sidebar-nav-item"><i class="fa-solid fa-building-ngo"></i> Dados da Instituição</a>
         </aside>
 
-        <!-- Main Content -->
         <main class="admin-main">
-            <!-- Header -->
             <div class="admin-page-header">
                 <div>
                     <h1>Visão Geral da Instituição</h1>
-                    <p style="color: var(--text-muted); font-size: 0.95rem;">Controle em tempo real de resgates, processos de adoção e apadrinhamentos.</p>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">Resumo dos seus resgates, solicitações e apadrinhamentos.</p>
                 </div>
-                <div class="quick-actions-bar" style="margin-bottom: 0;">
-                    <a href="gestao-pets.html?acao=novo" class="btn btn-orange">
-                        <i class="fa-solid fa-plus"></i> Novo Pet Resgatado
-                    </a>
-                    <a href="acompanhamento-adocoes.html" class="btn btn-secondary">
-                        <i class="fa-solid fa-clipboard-list"></i> Ver Solicitações
-                    </a>
+                <div>
+                    <a href="registrar-pet.html" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Registrar Novo Pet</a>
                 </div>
             </div>
 
-            <!-- Métricas Principais -->
             <div class="metrics-grid">
                 <div class="metric-card">
                     <div class="metric-card-info">
-                        <h4>Pets Sob Custódia</h4>
-                        <div class="metric-value" id="metricTotalPets">18</div>
+                        <h4>Pets Cadastrados</h4>
+                        <div class="metric-value" id="mTotalPets">0</div>
                     </div>
-                    <div class="metric-icon-box icon-orange">
-                        <i class="fa-solid fa-shield-dog"></i>
-                    </div>
+                    <div class="metric-icon-box icon-blue"><i class="fa-solid fa-dog"></i></div>
                 </div>
 
                 <div class="metric-card">
                     <div class="metric-card-info">
                         <h4>Adoções Pendentes</h4>
-                        <div class="metric-value" id="metricAdocoesPendentes">4</div>
+                        <div class="metric-value" id="mAdocoesPendentes">0</div>
                     </div>
-                    <div class="metric-icon-box icon-blue">
-                        <i class="fa-solid fa-clock-rotate-left"></i>
-                    </div>
+                    <div class="metric-icon-box icon-yellow"><i class="fa-solid fa-clock"></i></div>
                 </div>
 
                 <div class="metric-card">
                     <div class="metric-card-info">
                         <h4>Padrinhos Ativos</h4>
-                        <div class="metric-value" id="metricPadrinhosAtivos">12</div>
+                        <div class="metric-value" id="mPadrinhosAtivos">0</div>
                     </div>
-                    <div class="metric-icon-box icon-green">
-                        <i class="fa-solid fa-hand-holding-heart"></i>
-                    </div>
+                    <div class="metric-icon-box icon-green"><i class="fa-solid fa-hand-holding-heart"></i></div>
                 </div>
 
                 <div class="metric-card">
                     <div class="metric-card-info">
-                        <h4>Prontuários no Mês</h4>
-                        <div class="metric-value" id="metricProntuarios">9</div>
+                        <h4>Procedimentos no Mês</h4>
+                        <div class="metric-value" id="mProntuarios">0</div>
                     </div>
-                    <div class="metric-icon-box icon-purple">
-                        <i class="fa-solid fa-file-waveform"></i>
-                    </div>
+                    <div class="metric-icon-box icon-purple"><i class="fa-solid fa-notes-medical"></i></div>
                 </div>
             </div>
 
-            <!-- Seção de Ações Rápidas e Tabelas Resumo -->
             <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px;">
-                <!-- Solicitações Recentes -->
                 <div class="card">
                     <div class="card-header">
-                        <h3 style="font-size: 1.1rem; color: var(--dark-blue); font-weight: 700;">
-                            <i class="fa-solid fa-bell" style="color: var(--primary-orange);"></i> Últimas Solicitações de Adoção
-                        </h3>
+                        <h3 style="color: var(--dark-blue); font-weight: 700;"><i class="fa-solid fa-bell" style="color: var(--primary-blue);"></i> Últimas Solicitações de Adoção</h3>
                         <a href="acompanhamento-adocoes.html" class="btn btn-secondary btn-sm">Ver Todas</a>
                     </div>
                     <div class="table-responsive">
@@ -140,55 +96,21 @@
                                     <th>Adotante</th>
                                     <th>Data</th>
                                     <th>Status</th>
-                                    <th>Ação</th>
                                 </tr>
                             </thead>
-                            <tbody id="resumoAdocoesTbody">
-                                <tr>
-                                    <td><strong>Thor</strong> (Cão)</td>
-                                    <td>Carlos Silva</td>
-                                    <td>20/10/2026</td>
-                                    <td><span class="badge badge-warning">Em Análise</span></td>
-                                    <td><a href="acompanhamento-adocoes.html" class="btn btn-outline-orange btn-sm">Avaliar</a></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Bob</strong> (Cão)</td>
-                                    <td>Mariana Lima</td>
-                                    <td>19/10/2026</td>
-                                    <td><span class="badge badge-info">Solicitada</span></td>
-                                    <td><a href="acompanhamento-adocoes.html" class="btn btn-outline-orange btn-sm">Avaliar</a></td>
-                                </tr>
+                            <tbody id="tBodyAdocoes">
+                                <tr><td colspan="4" style="text-align: center;">Carregando...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- Painel de Pets e Prontuários Recentes -->
                 <div class="card">
                     <div class="card-header">
-                        <h3 style="font-size: 1.1rem; color: var(--dark-blue); font-weight: 700;">
-                            <i class="fa-solid fa-notes-medical" style="color: var(--primary-blue);"></i> Procedimentos Clínicos Recentes
-                        </h3>
-                        <a href="prontuario-veterinario.html?id=1" class="btn btn-secondary btn-sm">Novo Registro</a>
+                        <h3 style="color: var(--dark-blue); font-weight: 700;"><i class="fa-solid fa-stethoscope" style="color: var(--primary-blue);"></i> Prontuários Recentes</h3>
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 12px;" id="procedimentosRecentesList">
-                        <div style="padding: 12px; background: #F8FAFC; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px;">
-                                <strong>Thor</strong>
-                                <span class="badge badge-info">15/09/2026</span>
-                            </div>
-                            <p style="font-size: 0.9rem; color: var(--dark-blue); font-weight: 600;">Vacinação V10 Anual</p>
-                            <p style="font-size: 0.8rem; color: var(--text-muted);">Administrada primeira dose de reforço sem reações adversas.</p>
-                        </div>
-
-                        <div style="padding: 12px; background: #F8FAFC; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px;">
-                                <strong>Luna</strong>
-                                <span class="badge badge-info">10/10/2026</span>
-                            </div>
-                            <p style="font-size: 0.9rem; color: var(--dark-blue); font-weight: 600;">Castração Eletiva</p>
-                            <p style="font-size: 0.8rem; color: var(--text-muted);">Procedimento cirúrgico de ovariosalpingohisterectomia concluído com sucesso.</p>
-                        </div>
+                    <div id="listProcedimentos" style="display: flex; flex-direction: column; gap: 12px;">
+                        <p style="color: var(--text-muted);">Nenhum procedimento recente.</p>
                     </div>
                 </div>
             </div>
@@ -196,10 +118,62 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        const API_URL = 'http://127.0.0.1:8000/api';
+
+        document.addEventListener('DOMContentLoaded', async () => {
             const session = JSON.parse(localStorage.getItem('adotapet_session'));
-            if (session && session.tipo_usuario === 'Instituicao' && session.email) {
-                document.getElementById('ongNavName').textContent = session.email.split('@')[0];
+            if (!session || !session.id_usuario) {
+                window.location.href = 'login.html';
+                return;
+            }
+            document.getElementById('ongNavName').textContent = session.nome || 'Instituição';
+
+            try {
+                const res = await fetch(`${API_URL}/instituicao/${session.id_usuario}/dashboard`);
+                if (!res.ok) throw new Error('Erro ao carregar dados.');
+                const data = await res.json();
+
+                document.getElementById('mTotalPets').textContent = data.metricas.totalPets;
+                document.getElementById('mAdocoesPendentes').textContent = data.metricas.adocoesPendentes;
+                document.getElementById('mPadrinhosAtivos').textContent = data.metricas.padrinhosAtivos;
+                document.getElementById('mProntuarios').textContent = data.metricas.prontuariosMes;
+
+                const tbody = document.getElementById('tBodyAdocoes');
+                tbody.innerHTML = '';
+                if (data.ultimasAdocoes.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Nenhuma solicitação recente.</td></tr>';
+                } else {
+                    data.ultimasAdocoes.forEach(a => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td><strong>${a.pet_nome}</strong> (${a.pet_especie})</td>
+                                <td>${a.adotante_nome}</td>
+                                <td>${a.data}</td>
+                                <td><span class="badge badge-warning">${a.status}</span></td>
+                            </tr>
+                        `;
+                    });
+                }
+
+                const listProc = document.getElementById('listProcedimentos');
+                listProc.innerHTML = '';
+                if (data.procedimentos.length === 0) {
+                    listProc.innerHTML = '<p style="color: var(--text-muted);">Nenhum procedimento recente.</p>';
+                } else {
+                    data.procedimentos.forEach(p => {
+                        listProc.innerHTML += `
+                            <div style="padding: 12px; background: var(--light-blue-bg); border-radius: var(--radius-sm);">
+                                <div style="display: flex; justify-content: space-between; font-weight: 700; color: var(--dark-blue);">
+                                    <span>${p.pet_nome} - ${p.tipo}</span>
+                                    <span style="font-size: 0.8rem; color: var(--text-muted);">${p.data}</span>
+                                </div>
+                                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">${p.descricao}</p>
+                            </div>
+                        `;
+                    });
+                }
+            } catch (err) {
+                console.error(err);
             }
         });
     </script>
