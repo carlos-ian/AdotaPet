@@ -122,10 +122,7 @@
     </div>
 
     <script>
-        // Configuração dinâmica da API: se hospedado na nuvem usa a mesma origem (/api), senão conecta ao backend local
-        const API_URL = (window.location.protocol === 'file:' || window.location.port === '5500' || window.location.port === '3000' || window.location.port === '5173')
-            ? 'http://127.0.0.1:8000/api'
-            : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? ${window.location.protocol}//:8000/api : '/api');
+        const API_URL = '/api';
         let petAtual = null;
 
         function getPetId() {
