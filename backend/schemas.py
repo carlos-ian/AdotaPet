@@ -65,6 +65,7 @@ class ProntuarioSchema(BaseModel):
     id_animal: int
     tipo_procedimento: str
     descricao: Optional[str] = None
+    data_procedimento: Optional[str] = None
 
 class InstituicaoUpdateSchema(BaseModel):
     razao_social: str
