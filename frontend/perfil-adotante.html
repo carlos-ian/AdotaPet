@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -95,7 +95,10 @@
     </div>
 
     <script>
-        const API_URL = 'http://127.0.0.1:8000/api';
+        // Configuração dinâmica da API: se hospedado na nuvem usa a mesma origem (/api), senão conecta ao backend local
+        const API_URL = (window.location.protocol === 'file:' || window.location.port === '5500' || window.location.port === '3000' || window.location.port === '5173')
+            ? 'http://127.0.0.1:8000/api'
+            : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? ${window.location.protocol}//:8000/api : '/api');
 
         async function carregarPerfil() {
             const session = JSON.parse(localStorage.getItem('adotapet_session'));
